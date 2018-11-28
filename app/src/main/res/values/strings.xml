@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">The Movie Db</string>
+    <string name="s_movies">Фильмы</string>
+    <string name="s_genres">Жанры</string>
 </resources>
