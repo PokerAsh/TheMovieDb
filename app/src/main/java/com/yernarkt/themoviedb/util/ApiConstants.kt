@@ -8,3 +8,4 @@ const val BASE_URL = BuildConfig.BASE_URL
 const val BASE_IMAGE_URL = BuildConfig.BASE_IMAGE_URL
 const val MOVIE_POPULAR = BuildConfig.MOVIE_POPULAR
 const val MOVIE_UPCOMING = BuildConfig.MOVIE_UPCOMING
+const val GENRE_MOVIE_LIST = BuildConfig.GENRE_MOVIE_LIST

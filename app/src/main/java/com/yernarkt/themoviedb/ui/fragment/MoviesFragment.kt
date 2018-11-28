@@ -53,7 +53,7 @@ class MoviesFragment : Fragment(), IBaseView {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        mView = inflater.inflate(R.layout.fragment_movies_popular, container, false)
+        mView = inflater.inflate(R.layout.fragment_list, container, false)
         movieList = ArrayList()
         moviesProgressBar = mView.findViewById(R.id.moviesProgressBar)
         moviesRecyclerView = mView.findViewById(R.id.moviesRecyclerView)
@@ -67,10 +67,7 @@ class MoviesFragment : Fragment(), IBaseView {
     }
 
     private fun setupTitle() {
-        when (movieType) {
-            "Popular" -> appCompatActivity.supportActionBar!!.title = resources.getString(R.string.s_movies)
-            "Upcoming" -> appCompatActivity.supportActionBar!!.title = resources.getString(R.string.s_soon)
-        }
+        appCompatActivity.supportActionBar!!.title = resources.getString(R.string.s_movies)
     }
 
     override fun onResume() {

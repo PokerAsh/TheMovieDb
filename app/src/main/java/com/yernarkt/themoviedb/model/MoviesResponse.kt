@@ -4,7 +4,7 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import com.yernarkt.themoviedb.model.MoviesResult
 
-abstract class MoviesResponse{
+open class MoviesResponse{
     @SerializedName("page")
     @Expose
     var page: Int? = null
