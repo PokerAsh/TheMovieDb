@@ -55,11 +55,16 @@ class MoviesPopularFragment : Fragment(), IBaseView {
         loadPopularMovies(page)
     }
 
+    private var snackBar: Snackbar? = null
     private fun loadPopularMovies(page: Int) {
+        snackBar = Snackbar.make(mView, R.string.string_internet_connection_warning, Snackbar.LENGTH_INDEFINITE)
+        snackBar!!.setAction("Понятно") {
+            snackBar!!.dismiss()
+        }
         if (InternetConnection.checkConnection(appCompatActivity)) {
             presenter.loadPopularMovies(page)
         } else {
-            Snackbar.make(mView, R.string.string_internet_connection_warning, Snackbar.LENGTH_INDEFINITE).show()
+            snackBar!!.show()
         }
     }
 
@@ -85,5 +90,10 @@ class MoviesPopularFragment : Fragment(), IBaseView {
         val linearLayoutManager = GridLayoutManager(context, 2)
         popularRecyclerView!!.layoutManager = linearLayoutManager
         popularRecyclerView!!.adapter = adapter
+    }
+
+    override fun onPause() {
+        super.onPause()
+        snackBar!!.dismiss()
     }
 }
