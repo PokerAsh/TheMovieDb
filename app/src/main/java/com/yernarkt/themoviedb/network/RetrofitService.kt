@@ -1,6 +1,6 @@
 package com.yernarkt.themoviedb.network
 
-import com.yernarkt.themoviedb.model.popular.MoviesResponse
+import com.yernarkt.themoviedb.model.MoviesResponse
 import com.yernarkt.themoviedb.model.upcoming.UpcomingMoviesResponse
 import com.yernarkt.themoviedb.util.MOVIE_POPULAR
 import com.yernarkt.themoviedb.util.MOVIE_UPCOMING

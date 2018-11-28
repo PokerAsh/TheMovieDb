@@ -1,4 +1,4 @@
-package com.yernarkt.themoviedb.model.popular
+package com.yernarkt.themoviedb.model
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName

@@ -67,7 +67,10 @@ class MoviesFragment : Fragment(), IBaseView {
     }
 
     private fun setupTitle() {
-        appCompatActivity.supportActionBar!!.title = resources.getString(R.string.s_movies)
+        when (movieType) {
+            "Popular" -> appCompatActivity.supportActionBar!!.title = resources.getString(R.string.s_movies)
+            "Upcoming" -> appCompatActivity.supportActionBar!!.title = resources.getString(R.string.s_soon)
+        }
     }
 
     override fun onResume() {

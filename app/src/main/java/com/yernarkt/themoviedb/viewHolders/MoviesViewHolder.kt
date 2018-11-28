@@ -18,7 +18,7 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget
 import com.bumptech.glide.request.transition.Transition
 import com.yernarkt.themoviedb.R
 import com.yernarkt.themoviedb.model.MoviesResult
-import com.yernarkt.themoviedb.model.popular.MoviesResponse
+import com.yernarkt.themoviedb.model.MoviesResponse
 import com.yernarkt.themoviedb.util.BASE_IMAGE_URL
 
 class MoviesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

@@ -6,7 +6,7 @@ import android.view.View
 import com.yernarkt.themoviedb.R
 import com.yernarkt.themoviedb.adapter.MoviesAdapter
 import com.yernarkt.themoviedb.model.MoviesResult
-import com.yernarkt.themoviedb.model.popular.MoviesResponse
+import com.yernarkt.themoviedb.model.MoviesResponse
 import com.yernarkt.themoviedb.model.upcoming.UpcomingMoviesResponse
 import com.yernarkt.themoviedb.network.ServiceGenerator
 import com.yernarkt.themoviedb.util.API_KEY

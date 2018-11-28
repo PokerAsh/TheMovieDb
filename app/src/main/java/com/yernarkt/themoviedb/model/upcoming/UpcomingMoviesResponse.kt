@@ -2,7 +2,7 @@ package com.yernarkt.themoviedb.model.upcoming
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import com.yernarkt.themoviedb.model.popular.MoviesResponse
+import com.yernarkt.themoviedb.model.MoviesResponse
 
 
 class UpcomingMoviesResponse(
