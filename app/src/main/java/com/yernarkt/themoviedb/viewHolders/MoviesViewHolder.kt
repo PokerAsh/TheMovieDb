@@ -17,16 +17,16 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import com.bumptech.glide.request.transition.Transition
 import com.yernarkt.themoviedb.R
-import com.yernarkt.themoviedb.model.PopularMoviesResponse
-import com.yernarkt.themoviedb.model.PopularMoviesResult
+import com.yernarkt.themoviedb.model.MoviesResult
+import com.yernarkt.themoviedb.model.popular.MoviesResponse
 import com.yernarkt.themoviedb.util.BASE_IMAGE_URL
 
-class PopularMoviesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class MoviesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private var moviesPoster: ImageView = itemView.findViewById(R.id.movieImageView)
     private var moviesView: View = itemView.findViewById(R.id.movieViewBackground)
     private var moviesName: TextView = itemView.findViewById(R.id.movieNameText)
 
-    fun bind(context: Context, data: PopularMoviesResult) {
+    fun bind(context: Context, data: MoviesResult) {
         moviesName.text = data.title
         val options = RequestOptions()
             .centerCrop()
@@ -46,12 +46,13 @@ class PopularMoviesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView
             })
     }
 
-    fun setClick(data: PopularMoviesResponse, context: Context) {
+    fun setClick(data: MoviesResponse, context: Context) {
         itemView.setOnClickListener {
             val pos = adapterPosition
 
             if (pos != RecyclerView.NO_POSITION) {
-                Snackbar.make(itemView, String.format("Hello %s", data.results!![pos].title), Snackbar.LENGTH_LONG).show()
+                Snackbar.make(itemView, String.format("Hello %s", data.results!![pos].title), Snackbar.LENGTH_LONG)
+                    .show()
             }
         }
     }

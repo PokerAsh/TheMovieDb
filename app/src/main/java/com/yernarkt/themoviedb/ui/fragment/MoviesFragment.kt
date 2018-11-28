@@ -12,84 +12,107 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import com.yernarkt.themoviedb.R
+import com.yernarkt.themoviedb.model.MoviesResult
 import com.yernarkt.themoviedb.util.InternetConnection
+import com.yernarkt.themoviedb.util.MOVIE_TYPE
 import com.yernarkt.themoviedb.view.IBaseView
-import com.yernarkt.themoviedb.view.PopularMoviesPresenter
+import com.yernarkt.themoviedb.view.MoviesPresenter
 
-class MoviesPopularFragment : Fragment(), IBaseView {
+class MoviesFragment : Fragment(), IBaseView {
     private lateinit var appCompatActivity: AppCompatActivity
     private lateinit var mView: View
-    private lateinit var presenter: PopularMoviesPresenter
-    private var popularProgressBar: ProgressBar? = null
-    private var popularRecyclerView: RecyclerView? = null
+    private lateinit var presenter: MoviesPresenter
+    private var moviesProgressBar: ProgressBar? = null
+    private var moviesRecyclerView: RecyclerView? = null
 
+    private lateinit var movieList: ArrayList<MoviesResult>
+    private var snackBar: Snackbar? = null
     private var page = PAGE_NUMBER
+    private lateinit var movieType: String
 
     companion object {
         private const val PAGE_NUMBER: Int = 1
 
-        fun newInstance(): MoviesPopularFragment {
-            return MoviesPopularFragment()
+        fun newInstance(movieType: String): MoviesFragment {
+            val fragment = MoviesFragment()
+            val bundle = Bundle()
+            bundle.putString(MOVIE_TYPE, movieType)
+            fragment.arguments = bundle
+            return fragment
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appCompatActivity = context as AppCompatActivity
+
+        val bundle = arguments
+        if (bundle != null) {
+            movieType = bundle.getString(MOVIE_TYPE, "Popular")
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mView = inflater.inflate(R.layout.fragment_movies_popular, container, false)
-        popularProgressBar = mView.findViewById(R.id.popularProgressBar)
-        popularRecyclerView = mView.findViewById(R.id.popularRecyclerView)
+        movieList = ArrayList()
+        moviesProgressBar = mView.findViewById(R.id.moviesProgressBar)
+        moviesRecyclerView = mView.findViewById(R.id.moviesRecyclerView)
         return mView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupTitle()
         initPresenter()
+    }
+
+    private fun setupTitle() {
+        appCompatActivity.supportActionBar!!.title = resources.getString(R.string.s_movies)
     }
 
     override fun onResume() {
         super.onResume()
-        loadPopularMovies(page)
+        loadMovies(page)
     }
 
-    private var snackBar: Snackbar? = null
-    private fun loadPopularMovies(page: Int) {
+    private fun loadMovies(page: Int) {
         snackBar = Snackbar.make(mView, R.string.string_internet_connection_warning, Snackbar.LENGTH_INDEFINITE)
         snackBar!!.setAction("Понятно") {
             snackBar!!.dismiss()
         }
         if (InternetConnection.checkConnection(appCompatActivity)) {
-            presenter.loadPopularMovies(page)
+            loadMovieType(page, movieType)
         } else {
             snackBar!!.show()
         }
     }
 
+    private fun loadMovieType(page: Int, movieType: String) {
+        presenter.loadMovies(page, movieType)
+    }
+
     private fun initPresenter() {
-        presenter = PopularMoviesPresenter(appCompatActivity, this, mView)
+        presenter = MoviesPresenter(appCompatActivity, this, mView, movieList)
     }
 
     override fun setVisibilityProgressBar(visibility: Int) {
         when (visibility) {
             View.GONE -> {
-                popularProgressBar!!.visibility = View.GONE
-                popularRecyclerView!!.visibility = View.VISIBLE
-                Handler().postDelayed({ popularRecyclerView!!.scrollToPosition(0) }, 200)
+                moviesProgressBar!!.visibility = View.GONE
+                moviesRecyclerView!!.visibility = View.VISIBLE
+                Handler().postDelayed({ moviesRecyclerView!!.scrollToPosition(0) }, 200)
             }
             View.VISIBLE -> {
-                popularProgressBar!!.visibility = View.VISIBLE
-                popularRecyclerView!!.visibility = View.GONE
+                moviesProgressBar!!.visibility = View.VISIBLE
+                moviesRecyclerView!!.visibility = View.GONE
             }
         }
     }
 
     override fun setRecyclerViewAdapter(adapter: RecyclerView.Adapter<*>) {
         val linearLayoutManager = GridLayoutManager(context, 2)
-        popularRecyclerView!!.layoutManager = linearLayoutManager
-        popularRecyclerView!!.adapter = adapter
+        moviesRecyclerView!!.layoutManager = linearLayoutManager
+        moviesRecyclerView!!.adapter = adapter
     }
 
     override fun onPause() {

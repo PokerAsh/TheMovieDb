@@ -3,7 +3,7 @@ package com.yernarkt.themoviedb.model
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class PopularMoviesResult(
+class MoviesResult(
     @SerializedName("vote_count")
     @Expose
     var voteCount: Int = 0,

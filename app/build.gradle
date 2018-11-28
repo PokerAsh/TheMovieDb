@@ -26,6 +26,7 @@ android {
         it.buildConfigField 'String', 'BASE_IMAGE_URL', BASE_IMAGE_URL
 
         it.buildConfigField 'String', 'MOVIE_POPULAR', MOVIE_POPULAR
+        it.buildConfigField 'String', 'MOVIE_UPCOMING', MOVIE_UPCOMING
     }
 
     compileOptions {

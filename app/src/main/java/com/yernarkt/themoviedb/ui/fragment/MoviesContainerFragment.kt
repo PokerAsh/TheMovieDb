@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
-import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +16,6 @@ class MoviesContainerFragment : Fragment() {
     private lateinit var mView: View
     private lateinit var mAdapter: ViewPagerAdapter
 
-    private var containerToolbar: Toolbar? = null
     private var containerTabLayout: TabLayout? = null
     private var containerViewPager: ViewPager? = null
 
@@ -58,8 +56,6 @@ class MoviesContainerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews(view)
-        setupToolbar()
-
         setupViewPager(containerViewPager)
 
         containerTabLayout!!.setupWithViewPager(containerViewPager)
@@ -68,21 +64,15 @@ class MoviesContainerFragment : Fragment() {
     }
 
     private fun initViews(view: View) {
-        containerToolbar = view.findViewById(R.id.containerToolbar)
         containerTabLayout = view.findViewById(R.id.containerTabLayout)
         containerViewPager = view.findViewById(R.id.containerViewPager)
-    }
-
-    private fun setupToolbar() {
-        activity.setSupportActionBar(containerToolbar)
-        activity.supportActionBar!!.title = activity.resources.getString(R.string.s_movies)
     }
 
     private fun setupViewPager(containerViewPager: ViewPager?) {
         mAdapter = ViewPagerAdapter(childFragmentManager)
 
-        mAdapter.addFragment(MoviesPopularFragment.newInstance(), getString(R.string.s_popular))
-        mAdapter.addFragment(MoviesSoonFragment.newInstance(), getString(R.string.s_soon))
+        mAdapter.addFragment(MoviesFragment.newInstance("Popular"), getString(R.string.s_popular))
+        mAdapter.addFragment(MoviesFragment.newInstance("Upcoming"), getString(R.string.s_soon))
 
         containerViewPager!!.adapter = mAdapter
         containerViewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(containerTabLayout))
