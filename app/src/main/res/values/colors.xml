@@ -10,4 +10,6 @@
     <color name="black_translucent_60">#99000000</color>
 
     <color name="gray">#99a6a6a6</color>
+
+    <color name="black">#000000</color>
 </resources>

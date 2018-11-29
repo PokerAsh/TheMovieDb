@@ -17,7 +17,7 @@ class CustomSearchBar(context: Context, attrs: AttributeSet) : TransformingToolb
     override fun onFinishInflate() {
         super.onFinishInflate()
         inflate(context, R.layout.merge_search, this)
-        editText = findViewById(R.id.toolbar_search_edittext)
+        editText = findViewById(R.id.searchMoviesText)
     }
 
     override fun showContent() {
@@ -28,5 +28,4 @@ class CustomSearchBar(context: Context, attrs: AttributeSet) : TransformingToolb
     fun clearText() {
         editText!!.text = null
     }
-
 }

@@ -1,30 +1,42 @@
 package com.yernarkt.themoviedb.ui.activities
 
 import android.os.Bundle
+import android.os.Handler
+import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.text.Editable
+import android.text.TextWatcher
 import android.transition.Transition
 import android.transition.TransitionManager
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.EditText
+import android.widget.ProgressBar
 import com.yernarkt.themoviedb.R
 import com.yernarkt.themoviedb.util.custom.CustomSearchBar
-import com.yernarkt.themoviedb.util.transition.SimpleTransitionListener
 import com.yernarkt.themoviedb.util.transition.FadeInTransition
 import com.yernarkt.themoviedb.util.transition.FadeOutTransition
+import com.yernarkt.themoviedb.util.transition.SimpleTransitionListener
+import com.yernarkt.themoviedb.view.IBaseView
+import com.yernarkt.themoviedb.view.SearchPresenter
 
-class SearchActivity : SomeUtilityActivity() {
+class SearchActivity : SomeUtilityActivity(), IBaseView {
     private var searchbar: CustomSearchBar? = null
     private var searchMoviesText: EditText? = null
+    private var searchProgressBar: ProgressBar? = null
+    private var searchRecyclerView: RecyclerView? = null
+    private var searchPresenter: SearchPresenter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        searchbar = findViewById(R.id.searchToolbar)
-        searchMoviesText = findViewById(R.id.searchMoviesText)
+        initViews()
         setSupportActionBar(searchbar)
-
+        initPresenter()
+        searchMovies()
         if (isFirstTimeRunning(savedInstanceState)) {
             searchbar!!.hideContent()
 
@@ -41,6 +53,33 @@ class SearchActivity : SomeUtilityActivity() {
                 }
             })
         }
+    }
+
+    private fun searchMovies() {
+        searchMoviesText!!.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                searchPresenter!!.searchEngine(s)
+            }
+        })
+    }
+
+    private fun initViews() {
+        searchbar = findViewById(R.id.searchToolbar)
+        searchMoviesText = findViewById(R.id.searchMoviesText)
+        searchProgressBar = findViewById(R.id.searchProgressBar)
+        searchRecyclerView = findViewById(R.id.searchMovieList)
+    }
+
+    private fun initPresenter() {
+        searchPresenter = SearchPresenter(this, this)
     }
 
     private fun isFirstTimeRunning(savedInstanceState: Bundle?): Boolean {
@@ -73,6 +112,26 @@ class SearchActivity : SomeUtilityActivity() {
         searchbar!!.hideContent()
     }
 
+    override fun setVisibilityProgressBar(visibility: Int) {
+        when (visibility) {
+            View.GONE -> {
+                searchProgressBar!!.visibility = View.GONE
+                searchRecyclerView!!.visibility = View.VISIBLE
+                Handler().postDelayed({ searchRecyclerView!!.scrollToPosition(0) }, 200)
+            }
+            View.VISIBLE -> {
+                searchProgressBar!!.visibility = View.VISIBLE
+                searchRecyclerView!!.visibility = View.GONE
+            }
+        }
+    }
+
+    override fun setRecyclerViewAdapter(adapter: RecyclerView.Adapter<*>) {
+        val linearLayoutManager = GridLayoutManager(this, 2)
+        searchRecyclerView!!.layoutManager = linearLayoutManager
+        searchRecyclerView!!.adapter = adapter
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_search, menu)
         return true
@@ -84,6 +143,7 @@ class SearchActivity : SomeUtilityActivity() {
             return true
         } else if (item.itemId == R.id.action_clear) {
             searchbar!!.clearText()
+            searchPresenter!!.clearAdapter()
             return true
         }
         return super.onOptionsItemSelected(item)

@@ -37,4 +37,12 @@ interface RetrofitService {
         @Query("api_key") apiKey: String,
         @Query("language") language: String
     ): Observable<GenreResponse>
+
+    @GET(SEARCH_MOVIE)
+    fun searchMovie(
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String,
+        @Query("query") query: CharSequence?,
+        @Query("page") page: Int
+    ): Observable<MoviesResponse>
 }

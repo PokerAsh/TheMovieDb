@@ -17,8 +17,8 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import com.bumptech.glide.request.transition.Transition
 import com.yernarkt.themoviedb.R
-import com.yernarkt.themoviedb.model.MoviesResult
 import com.yernarkt.themoviedb.model.MoviesResponse
+import com.yernarkt.themoviedb.model.MoviesResult
 import com.yernarkt.themoviedb.util.BASE_IMAGE_URL
 
 class MoviesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -33,17 +33,19 @@ class MoviesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
             .priority(Priority.HIGH)
 
-        Glide.with(context)
-            .asBitmap()
-            .load(String.format("%s%s", BASE_IMAGE_URL, data.posterPath))
-            .apply(options)
-            .into(object : BitmapImageViewTarget(moviesPoster) {
-                override fun onResourceReady(bitmap: Bitmap, transition: Transition<in Bitmap>?) {
-                    super.onResourceReady(bitmap, transition)
-                    Palette.from(bitmap)
-                        .generate { palette -> setBackgroundColor(context as AppCompatActivity, palette!!) }
-                }
-            })
+        if (data.posterPath != null)
+            Glide.with(context)
+                .asBitmap()
+                .load(String.format("%s%s", BASE_IMAGE_URL, data.posterPath))
+                .apply(options)
+//                .error(R.mipmap.ic_launcher)
+                .into(object : BitmapImageViewTarget(moviesPoster) {
+                    override fun onResourceReady(bitmap: Bitmap, transition: Transition<in Bitmap>?) {
+                        super.onResourceReady(bitmap, transition)
+                        Palette.from(bitmap)
+                            .generate { palette -> setBackgroundColor(context as AppCompatActivity, palette!!) }
+                    }
+                })
     }
 
     fun setClick(data: MoviesResponse, context: Context) {

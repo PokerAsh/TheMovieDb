@@ -29,6 +29,7 @@ android {
         it.buildConfigField 'String', 'MOVIE_UPCOMING', MOVIE_UPCOMING
         it.buildConfigField 'String', 'GENRE_MOVIE_LIST', GENRE_MOVIE_LIST
         it.buildConfigField 'String', 'DISCOVER_MOVIE', DISCOVER_MOVIE
+        it.buildConfigField 'String', 'SEARCH_MOVIE', SEARCH_MOVIE
     }
 
     compileOptions {

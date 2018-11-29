@@ -9,3 +9,4 @@ const val MOVIE_POPULAR = BuildConfig.MOVIE_POPULAR
 const val MOVIE_UPCOMING = BuildConfig.MOVIE_UPCOMING
 const val GENRE_MOVIE_LIST = BuildConfig.GENRE_MOVIE_LIST
 const val DISCOVER_MOVIE = BuildConfig.DISCOVER_MOVIE
+const val SEARCH_MOVIE = BuildConfig.SEARCH_MOVIE

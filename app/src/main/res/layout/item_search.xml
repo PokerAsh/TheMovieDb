@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <ImageView android:layout_width="100dp" android:layout_height="100dp" app:layout_constraintStart_toStartOf="parent"
+               android:layout_marginStart="8dp" android:layout_marginTop="8dp"
+               app:layout_constraintTop_toTopOf="parent" android:id="@+id/searchPoster"
+               android:layout_marginBottom="8dp"
+               app:layout_constraintBottom_toBottomOf="parent" android:contentDescription="@null"/>
+
+    <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/searchTitle" app:layout_constraintStart_toEndOf="@+id/searchPoster"
+            android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
+            android:maxLines="2"
+            android:ellipsize="end"
+            tools:text="Фантастические твари: Преступление Грин-де-Вальда"/>
+
+    <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/searchReleaseDate" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+            app:layout_constraintStart_toEndOf="@+id/searchPoster" android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/searchTitle"
+            tools:text="2018-11-14"/>
+
+    <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:id="@+id/searchDescription" app:layout_constraintStart_toEndOf="@+id/searchPoster"
+            android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/searchReleaseDate"
+            tools:text="В конце первого фильма могущественный темный волшебник Геллерт Грин-де-Вальд был пойман сотрудниками МАКУСА (Магического Конгресса Управления по Северной Америке), не без помощи Ньюта Саламандера. Выполняя свое обещание, темный маг устраивает грандиозный побег и начинает собирать сторонников, большинство из которых не знают о его истинной цели: добиться превосходства волшебников над всеми немагическими существами на планете. Чтобы сорвать планы Грин-де-Вальда, Альбус Дамблдор обращается к своему бывшему студенту Ньюту Саламандеру, который соглашается помочь, не подозревая, какая опасность ему грозит. В раскалывающемся на части волшебном мире любовь и верность проверяются на прочность, а конфликт разделяет даже настоящих друзей и членов семей."
+            android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"/>
+</android.support.constraint.ConstraintLayout>
