@@ -9,10 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.yernarkt.themoviedb.R
 import com.yernarkt.themoviedb.adapter.ViewPagerAdapter
-import com.yernarkt.themoviedb.ui.activities.MainActivity
+import com.yernarkt.themoviedb.ui.activities.MovieBaseActivity
 
 class MoviesContainerFragment : Fragment() {
-    private lateinit var activity: MainActivity
+    private lateinit var baseActivity: MovieBaseActivity
     private lateinit var mView: View
     private lateinit var mAdapter: ViewPagerAdapter
 
@@ -45,7 +45,7 @@ class MoviesContainerFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activity = context as MainActivity
+        baseActivity = context as MovieBaseActivity
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

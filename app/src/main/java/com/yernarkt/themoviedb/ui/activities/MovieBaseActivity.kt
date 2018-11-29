@@ -10,7 +10,7 @@ import com.yernarkt.themoviedb.R
 import com.yernarkt.themoviedb.ui.fragment.GenresFragment
 import com.yernarkt.themoviedb.ui.fragment.MoviesContainerFragment
 
-class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
+class MovieBaseActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
     private lateinit var bottomNavBar: BottomNavigationView
     private var mainToolbar: Toolbar? = null
 

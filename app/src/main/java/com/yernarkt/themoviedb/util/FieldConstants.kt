@@ -1,3 +1,7 @@
 package com.yernarkt.themoviedb.util
 
+const val LANGUAGE = "ru-RU"
 const val MOVIE_TYPE: String = "MovieType"
+const val GENRE_ID: String = "GenreId"
+const val SORT_BY: String = "popularity.desc"
+const val EXTRA_TAG = "MovieList"

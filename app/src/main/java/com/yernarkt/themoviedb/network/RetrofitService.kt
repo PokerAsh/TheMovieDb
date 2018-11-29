@@ -23,6 +23,15 @@ interface RetrofitService {
         @Query("page") page: Int
     ): Observable<UpcomingMoviesResponse>
 
+    @GET(DISCOVER_MOVIE)
+    fun getMoviesByGenre(
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String,
+        @Query("sort_by") sortBy: String,
+        @Query("page") page: Int,
+        @Query("with_genres") genreId: String
+    ): Observable<MoviesResponse>
+
     @GET(GENRE_MOVIE_LIST)
     fun getGenreMovieList(
         @Query("api_key") apiKey: String,

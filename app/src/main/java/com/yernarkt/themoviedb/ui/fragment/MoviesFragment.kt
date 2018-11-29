@@ -8,27 +8,29 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import com.yernarkt.themoviedb.R
-import com.yernarkt.themoviedb.model.MoviesResult
+import com.yernarkt.themoviedb.ui.activities.MovieBaseActivity
+import com.yernarkt.themoviedb.util.GENRE_ID
 import com.yernarkt.themoviedb.util.InternetConnection
 import com.yernarkt.themoviedb.util.MOVIE_TYPE
 import com.yernarkt.themoviedb.view.IBaseView
 import com.yernarkt.themoviedb.view.MoviesPresenter
 
 class MoviesFragment : Fragment(), IBaseView {
-    private lateinit var appCompatActivity: AppCompatActivity
+    private lateinit var appCompatBaseActivity: AppCompatActivity
     private lateinit var mView: View
     private lateinit var presenter: MoviesPresenter
     private var moviesProgressBar: ProgressBar? = null
     private var moviesRecyclerView: RecyclerView? = null
 
-    private lateinit var movieList: ArrayList<MoviesResult>
     private var snackBar: Snackbar? = null
     private var page = PAGE_NUMBER
     private lateinit var movieType: String
+    private lateinit var genreId: String
 
     companion object {
         private const val PAGE_NUMBER: Int = 1
@@ -40,21 +42,31 @@ class MoviesFragment : Fragment(), IBaseView {
             fragment.arguments = bundle
             return fragment
         }
+
+        fun newInstance(movieType: String, genreId: String?): MoviesFragment {
+            val fragment = MoviesFragment()
+            val bundle = Bundle()
+            bundle.putString(MOVIE_TYPE, movieType)
+            bundle.putString(GENRE_ID, genreId)
+            fragment.arguments = bundle
+            return fragment
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        appCompatActivity = context as AppCompatActivity
+        setHasOptionsMenu(true)
+        appCompatBaseActivity = context as AppCompatActivity
 
         val bundle = arguments
         if (bundle != null) {
             movieType = bundle.getString(MOVIE_TYPE, "Popular")
+            genreId = bundle.getString(GENRE_ID, "0")
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mView = inflater.inflate(R.layout.fragment_list, container, false)
-        movieList = ArrayList()
         moviesProgressBar = mView.findViewById(R.id.moviesProgressBar)
         moviesRecyclerView = mView.findViewById(R.id.moviesRecyclerView)
         return mView
@@ -67,7 +79,10 @@ class MoviesFragment : Fragment(), IBaseView {
     }
 
     private fun setupTitle() {
-        appCompatActivity.supportActionBar!!.title = resources.getString(R.string.s_movies)
+        appCompatBaseActivity.supportActionBar!!.title = resources.getString(R.string.s_movies)
+        if (movieType == "Genre") {
+            appCompatBaseActivity.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        }
     }
 
     override fun onResume() {
@@ -80,7 +95,7 @@ class MoviesFragment : Fragment(), IBaseView {
         snackBar!!.setAction("Понятно") {
             snackBar!!.dismiss()
         }
-        if (InternetConnection.checkConnection(appCompatActivity)) {
+        if (InternetConnection.checkConnection(appCompatBaseActivity)) {
             loadMovieType(page, movieType)
         } else {
             snackBar!!.show()
@@ -88,11 +103,11 @@ class MoviesFragment : Fragment(), IBaseView {
     }
 
     private fun loadMovieType(page: Int, movieType: String) {
-        presenter.loadMovies(page, movieType)
+        presenter.loadMovies(page, movieType, genreId)
     }
 
     private fun initPresenter() {
-        presenter = MoviesPresenter(appCompatActivity, this, mView, movieList)
+        presenter = MoviesPresenter(appCompatBaseActivity, this, mView)
     }
 
     override fun setVisibilityProgressBar(visibility: Int) {
@@ -118,5 +133,16 @@ class MoviesFragment : Fragment(), IBaseView {
     override fun onPause() {
         super.onPause()
         snackBar!!.dismiss()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item!!.itemId) {
+            android.R.id.home -> {
+                appCompatBaseActivity.onBackPressed()
+                return true
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 }

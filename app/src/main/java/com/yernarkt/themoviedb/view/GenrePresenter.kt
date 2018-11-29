@@ -2,6 +2,7 @@ package com.yernarkt.themoviedb.view
 
 import android.content.Context
 import android.support.design.widget.Snackbar
+import android.support.v4.app.Fragment
 import android.view.View
 import com.yernarkt.themoviedb.R
 import com.yernarkt.themoviedb.adapter.MoviesAdapter

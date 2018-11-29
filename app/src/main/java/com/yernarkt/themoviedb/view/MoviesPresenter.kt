@@ -5,12 +5,13 @@ import android.support.design.widget.Snackbar
 import android.view.View
 import com.yernarkt.themoviedb.R
 import com.yernarkt.themoviedb.adapter.MoviesAdapter
-import com.yernarkt.themoviedb.model.MoviesResult
 import com.yernarkt.themoviedb.model.MoviesResponse
+import com.yernarkt.themoviedb.model.MoviesResult
 import com.yernarkt.themoviedb.model.upcoming.UpcomingMoviesResponse
 import com.yernarkt.themoviedb.network.ServiceGenerator
 import com.yernarkt.themoviedb.util.API_KEY
 import com.yernarkt.themoviedb.util.LANGUAGE
+import com.yernarkt.themoviedb.util.SORT_BY
 import com.yernarkt.themoviedb.viewHolders.MoviesViewHolder
 import io.reactivex.Observable
 import io.reactivex.Observer
@@ -22,17 +23,19 @@ import timber.log.Timber
 class MoviesPresenter(
     private val context: Context,
     private val baseView: IBaseView,
-    private val mView: View,
-    private val movieList: ArrayList<MoviesResult>
+    private val mView: View
 ) {
+    private lateinit var movieList: ArrayList<MoviesResult>
     private lateinit var adapter: MoviesAdapter<MoviesResult, MoviesViewHolder>
 
-    fun loadMovies(page: Int, movieType: String) {
+    fun loadMovies(page: Int, movieType: String, genreId: String) {
+        movieList = ArrayList()
         baseView.setVisibilityProgressBar(View.VISIBLE)
         val observable = when (movieType) {
             "Popular" -> generateMovieResponse(page)
+            "Genre" -> generateByGenreMovieResponse(genreId, page)
             else -> {
-                generateUpcomingMovies(page)
+                generateUpcomingMoviesResponse(page)
             }
         }
         observable
@@ -82,7 +85,7 @@ class MoviesPresenter(
             })
     }
 
-    private fun generateUpcomingMovies(page: Int): Observable<UpcomingMoviesResponse> {
+    private fun generateUpcomingMoviesResponse(page: Int): Observable<UpcomingMoviesResponse> {
         return ServiceGenerator.getRetrofitService().getUpcomingMovieList(
             API_KEY,
             LANGUAGE,
@@ -95,6 +98,16 @@ class MoviesPresenter(
             API_KEY,
             LANGUAGE,
             page
+        )
+    }
+
+    private fun generateByGenreMovieResponse(genreId: String, page: Int): Observable<MoviesResponse> {
+        return ServiceGenerator.getRetrofitService().getMoviesByGenre(
+            API_KEY,
+            LANGUAGE,
+            SORT_BY,
+            page,
+            genreId
         )
     }
 }
