@@ -8,4 +8,6 @@
     <string name="s_there_are_no_elements">Найдено ничего</string>
     <string name="s_on_failure_message">Произошла ошибка на сервере</string>
     <string name="string_internet_connection_warning">Интернет не подключен</string>
+    <string name="s_search">Искать</string>
+    <string name="s_search_movies">Искать фильм</string>
 </resources>
