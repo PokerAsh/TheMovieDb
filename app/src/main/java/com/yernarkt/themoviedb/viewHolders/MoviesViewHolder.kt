@@ -2,7 +2,6 @@ package com.yernarkt.themoviedb.viewHolders
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.graphics.Palette
@@ -19,6 +18,7 @@ import com.bumptech.glide.request.transition.Transition
 import com.yernarkt.themoviedb.R
 import com.yernarkt.themoviedb.model.MoviesResponse
 import com.yernarkt.themoviedb.model.MoviesResult
+import com.yernarkt.themoviedb.ui.fragment.MovieDetailFragment
 import com.yernarkt.themoviedb.util.BASE_IMAGE_URL
 
 class MoviesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -31,6 +31,7 @@ class MoviesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val options = RequestOptions()
             .centerCrop()
             .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+            .error(R.drawable.ic_no_image)
             .priority(Priority.HIGH)
 
         if (data.posterPath != null)
@@ -38,7 +39,6 @@ class MoviesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 .asBitmap()
                 .load(String.format("%s%s", BASE_IMAGE_URL, data.posterPath))
                 .apply(options)
-//                .error(R.mipmap.ic_launcher)
                 .into(object : BitmapImageViewTarget(moviesPoster) {
                     override fun onResourceReady(bitmap: Bitmap, transition: Transition<in Bitmap>?) {
                         super.onResourceReady(bitmap, transition)
@@ -49,12 +49,19 @@ class MoviesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     }
 
     fun setClick(data: MoviesResponse, context: Context) {
+        val pos = adapterPosition
+        val movieResult = data.results!![pos]
         itemView.setOnClickListener {
-            val pos = adapterPosition
-
             if (pos != RecyclerView.NO_POSITION) {
-                Snackbar.make(itemView, String.format("Hello %s", data.results!![pos].title), Snackbar.LENGTH_LONG)
-                    .show()
+                val activity = context as AppCompatActivity
+                activity.supportFragmentManager
+                    .beginTransaction()
+                    .replace(
+                        R.id.activity_container,
+                        MovieDetailFragment.newInstance(movieResult.id.toString(), movieResult.title!!)
+                    )
+                    .addToBackStack("movie_list")
+                    .commit()
             }
         }
     }

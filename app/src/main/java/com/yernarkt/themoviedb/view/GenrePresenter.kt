@@ -2,14 +2,15 @@ package com.yernarkt.themoviedb.view
 
 import android.content.Context
 import android.support.design.widget.Snackbar
-import android.support.v4.app.Fragment
 import android.view.View
 import com.yernarkt.themoviedb.R
 import com.yernarkt.themoviedb.adapter.MoviesAdapter
 import com.yernarkt.themoviedb.model.genres.Genre
 import com.yernarkt.themoviedb.model.genres.GenreResponse
 import com.yernarkt.themoviedb.network.ServiceGenerator
+import com.yernarkt.themoviedb.ui.fragment.GenresListFragment
 import com.yernarkt.themoviedb.util.API_KEY
+import com.yernarkt.themoviedb.util.LANGUAGE
 import com.yernarkt.themoviedb.viewHolders.GenreViewHolder
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -25,7 +26,7 @@ class GenrePresenter(private val context: Context, private val iBaseView: IBaseV
         iBaseView.setVisibilityProgressBar(View.VISIBLE)
         val observable = ServiceGenerator.getRetrofitService().getGenreMovieList(
             API_KEY,
-            "ru-RU"
+            LANGUAGE
         )
 
         observable

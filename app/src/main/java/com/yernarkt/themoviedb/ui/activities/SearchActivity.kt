@@ -66,7 +66,8 @@ class SearchActivity : SomeUtilityActivity(), IBaseView {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                searchPresenter!!.searchEngine(s)
+                if (count > 1)
+                    searchPresenter!!.searchEngine(s)
             }
         })
     }

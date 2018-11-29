@@ -22,10 +22,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activities.MoviesHelperActivity"
-                  android:screenOrientation="portrait"
-                  android:configChanges="orientation"
-                  android:theme="@style/AppTheme.NoActionBar"/>
         <activity
                 android:name=".ui.activities.SearchActivity"
                 android:windowSoftInputMode="stateVisible"

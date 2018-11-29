@@ -6,7 +6,6 @@ import android.os.Handler
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -18,7 +17,7 @@ import com.yernarkt.themoviedb.util.InternetConnection
 import com.yernarkt.themoviedb.view.GenrePresenter
 import com.yernarkt.themoviedb.view.IBaseView
 
-class GenresFragment : Fragment(), IBaseView {
+class GenresListFragment : Fragment(), IBaseView {
     private lateinit var appCompatActivity: AppCompatActivity
     private lateinit var mView: View
     private lateinit var presenter: GenrePresenter
@@ -27,8 +26,8 @@ class GenresFragment : Fragment(), IBaseView {
     private lateinit var snackBar: Snackbar
 
     companion object {
-        fun newInstance(): GenresFragment {
-            return GenresFragment()
+        fun newInstance(): GenresListFragment {
+            return GenresListFragment()
         }
     }
 

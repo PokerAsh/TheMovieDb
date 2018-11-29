@@ -3,69 +3,42 @@ package com.yernarkt.themoviedb.ui.activities
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
-import android.support.design.widget.BottomNavigationView
-import android.support.v4.app.Fragment
 import android.support.v7.widget.Toolbar
 import android.transition.Transition
 import android.transition.TransitionManager
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.FrameLayout
 import com.yernarkt.themoviedb.R
-import com.yernarkt.themoviedb.ui.fragment.GenresFragment
-import com.yernarkt.themoviedb.ui.fragment.MoviesContainerFragment
+import com.yernarkt.themoviedb.ui.fragment.MoviesBaseFragment
 import com.yernarkt.themoviedb.util.transition.FadeInTransition
 import com.yernarkt.themoviedb.util.transition.FadeOutTransition
 import com.yernarkt.themoviedb.util.transition.SimpleTransitionListener
 
-class MovieBaseActivity : SomeUtilityActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
-    private lateinit var bottomNavBar: BottomNavigationView
+class MovieBaseActivity : SomeUtilityActivity() {
     private var mainToolbar: Toolbar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        initViews()
-        switchFragment(MoviesContainerFragment.newInstance())
-        setupToolbar()
-    }
+        setContentView(R.layout.activity_movie_base)
 
-    private fun setupToolbar() {
-        setSupportActionBar(mainToolbar)
+        initViews()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.activity_container, MoviesBaseFragment.newInstance())
+            .commit()
     }
 
     private fun initViews() {
         mainToolbar = findViewById(R.id.mainToolbar)
-        bottomNavBar = findViewById(R.id.bottomNavigationView)
         setSupportActionBar(mainToolbar)
-        bottomNavBar.setOnNavigationItemSelectedListener(this)
-    }
-
-    override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
-        var fragment: Fragment? = null
-
-        when (menuItem.itemId) {
-            R.id.navigation_movies -> fragment = MoviesContainerFragment.newInstance()
-            R.id.navigation_genres -> fragment = GenresFragment.newInstance()
-        }
-
-        return switchFragment(fragment)
-    }
-
-    private fun switchFragment(fragment: Fragment? = null): Boolean {
-        if (fragment != null) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.mainFrameLayout, fragment)
-                .commit()
-            return true
-        }
-
-        return false
     }
 
     override fun onResume() {
         super.onResume()
         fadeToolbarIn()
+    }
+
+    fun getToolbar(): Toolbar{
+        return mainToolbar!!
     }
 
     private fun fadeToolbarIn() {
@@ -114,6 +87,7 @@ class MovieBaseActivity : SomeUtilityActivity(), BottomNavigationView.OnNavigati
         if (count == 0) {
             super.onBackPressed()
         } else {
+            supportActionBar!!.setDisplayHomeAsUpEnabled(false)
             supportFragmentManager.popBackStack()
         }
     }

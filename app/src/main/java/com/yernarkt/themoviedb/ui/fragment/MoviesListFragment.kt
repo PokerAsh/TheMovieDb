@@ -13,14 +13,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import com.yernarkt.themoviedb.R
-import com.yernarkt.themoviedb.ui.activities.MovieBaseActivity
 import com.yernarkt.themoviedb.util.GENRE_ID
 import com.yernarkt.themoviedb.util.InternetConnection
 import com.yernarkt.themoviedb.util.MOVIE_TYPE
 import com.yernarkt.themoviedb.view.IBaseView
 import com.yernarkt.themoviedb.view.MoviesPresenter
 
-class MoviesFragment : Fragment(), IBaseView {
+class MoviesListFragment : Fragment(), IBaseView {
     private lateinit var appCompatBaseActivity: AppCompatActivity
     private lateinit var mView: View
     private lateinit var presenter: MoviesPresenter
@@ -35,16 +34,16 @@ class MoviesFragment : Fragment(), IBaseView {
     companion object {
         private const val PAGE_NUMBER: Int = 1
 
-        fun newInstance(movieType: String): MoviesFragment {
-            val fragment = MoviesFragment()
+        fun newInstance(movieType: String): MoviesListFragment {
+            val fragment = MoviesListFragment()
             val bundle = Bundle()
             bundle.putString(MOVIE_TYPE, movieType)
             fragment.arguments = bundle
             return fragment
         }
 
-        fun newInstance(movieType: String, genreId: String?): MoviesFragment {
-            val fragment = MoviesFragment()
+        fun newInstance(movieType: String, genreId: String?): MoviesListFragment {
+            val fragment = MoviesListFragment()
             val bundle = Bundle()
             bundle.putString(MOVIE_TYPE, movieType)
             bundle.putString(GENRE_ID, genreId)

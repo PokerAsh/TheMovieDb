@@ -8,7 +8,7 @@
 
 
     <android.support.design.widget.TabLayout
-            android:id="@+id/containerTabLayout"
+            android:id="@+id/pagerTabLayout"
             style="@style/MyCustomTabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -18,9 +18,9 @@
             app:tabIndicatorColor="@color/tabIndicatorColor"/>
 
     <android.support.v4.view.ViewPager
-            android:id="@+id/containerViewPager"
+            android:id="@+id/pagerViewPager"
             android:layout_width="0dp"
-            android:layout_height="0dp" app:layout_constraintTop_toBottomOf="@+id/containerTabLayout"
+            android:layout_height="0dp" app:layout_constraintTop_toBottomOf="@+id/pagerTabLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
