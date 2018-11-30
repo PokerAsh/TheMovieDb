@@ -2,6 +2,8 @@ package com.yernarkt.themoviedb.view
 
 import android.content.Context
 import android.support.design.widget.Snackbar
+import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.yernarkt.themoviedb.R
 import com.yernarkt.themoviedb.adapter.MoviesAdapter
@@ -9,8 +11,10 @@ import com.yernarkt.themoviedb.model.MoviesResponse
 import com.yernarkt.themoviedb.model.MoviesResult
 import com.yernarkt.themoviedb.model.upcoming.UpcomingMoviesResponse
 import com.yernarkt.themoviedb.network.ServiceGenerator
+import com.yernarkt.themoviedb.ui.fragment.MovieDetailFragment
 import com.yernarkt.themoviedb.util.API_KEY
 import com.yernarkt.themoviedb.util.LANGUAGE
+import com.yernarkt.themoviedb.util.OnRecyclerViewItemClickListener
 import com.yernarkt.themoviedb.util.SORT_BY
 import com.yernarkt.themoviedb.viewHolders.MoviesViewHolder
 import io.reactivex.Observable
@@ -25,8 +29,8 @@ class MoviesPresenter(
     private val baseView: IBaseView,
     private val mView: View
 ) {
-    private lateinit var movieList: ArrayList<MoviesResult>
-    private lateinit var adapter: MoviesAdapter<MoviesResult, MoviesViewHolder>
+    private var movieList: ArrayList<MoviesResult>? = null
+    private var adapter: MoviesAdapter<MoviesResult, MoviesViewHolder>? = null
 
     fun loadMovies(page: Int, movieType: String, genreId: String) {
         movieList = ArrayList()
@@ -49,7 +53,7 @@ class MoviesPresenter(
                 override fun onNext(dataList: MoviesResponse) {
                     baseView.setVisibilityProgressBar(View.GONE)
                     if (dataList.results != null) {
-                        movieList.addAll(dataList.results!!)
+                        movieList!!.addAll(dataList.results!!)
                         adapter = object : MoviesAdapter<MoviesResult, MoviesViewHolder>(
                             R.layout.item_movie,
                             MoviesViewHolder::class.java,
@@ -62,11 +66,28 @@ class MoviesPresenter(
                                 position: Int
                             ) {
                                 holder.bind(context, model)
-                                holder.setClick(dataList, context)
+                                holder.setClick(object : OnRecyclerViewItemClickListener {
+                                    override fun onItemClick(position: Int) {
+                                        if (position != RecyclerView.NO_POSITION) {
+                                            val activity = context as AppCompatActivity
+                                            activity.supportFragmentManager
+                                                .beginTransaction()
+                                                .replace(
+                                                    R.id.activity_container,
+                                                    MovieDetailFragment.newInstance(
+                                                        movieList!![position].id.toString(),
+                                                        movieList!![position].title!!
+                                                    )
+                                                )
+                                                .addToBackStack("movie_list")
+                                                .commit()
+                                        }
+                                    }
+                                })
                             }
                         }
 
-                        baseView.setRecyclerViewAdapter(adapter)
+                        baseView.setRecyclerViewAdapter(adapter!!)
                     } else {
                         Snackbar.make(mView, context.getString(R.string.s_there_are_no_elements), Snackbar.LENGTH_SHORT)
                             .show()

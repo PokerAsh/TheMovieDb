@@ -7,3 +7,4 @@ const val MOVIE_ID: String = "MovieId"
 const val MOVIE_TITLE: String = "MovieTitle"
 const val SORT_BY: String = "popularity.desc"
 const val EXTRA_TAG = "MovieList"
+const val REQUEST_CODE_SEARCH_ACTIVITY = 100

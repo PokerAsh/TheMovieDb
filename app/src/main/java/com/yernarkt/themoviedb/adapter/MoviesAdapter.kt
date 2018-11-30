@@ -29,7 +29,6 @@ abstract class MoviesAdapter<T, VH : RecyclerView.ViewHolder>(
         } catch (e: IllegalAccessException) {
             throw RuntimeException(e)
         }
-
     }
 
     override fun onBindViewHolder(holder: VH, position: Int) {

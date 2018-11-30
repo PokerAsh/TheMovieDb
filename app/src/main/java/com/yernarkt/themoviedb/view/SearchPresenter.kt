@@ -1,18 +1,19 @@
 package com.yernarkt.themoviedb.view
 
+import android.app.Activity.RESULT_OK
 import android.content.Context
-import android.support.design.widget.Snackbar
+import android.content.Intent
 import android.view.View
 import android.widget.Toast
 import com.yernarkt.themoviedb.R
 import com.yernarkt.themoviedb.adapter.MoviesAdapter
 import com.yernarkt.themoviedb.model.MoviesResponse
 import com.yernarkt.themoviedb.model.MoviesResult
-import com.yernarkt.themoviedb.model.genres.Genre
 import com.yernarkt.themoviedb.network.ServiceGenerator
+import com.yernarkt.themoviedb.ui.activities.SearchActivity
 import com.yernarkt.themoviedb.util.API_KEY
 import com.yernarkt.themoviedb.util.LANGUAGE
-import com.yernarkt.themoviedb.viewHolders.GenreViewHolder
+import com.yernarkt.themoviedb.util.OnRecyclerViewItemClickListener
 import com.yernarkt.themoviedb.viewHolders.MoviesViewHolder
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -26,7 +27,6 @@ class SearchPresenter(val context: Context, val iBaseView: IBaseView) {
     private var movieList: ArrayList<MoviesResult>? = null
 
     fun searchEngine(s: CharSequence?) {
-        movieList = ArrayList()
         iBaseView.setVisibilityProgressBar(View.VISIBLE)
         val observable = ServiceGenerator.getRetrofitService().searchMovie(
             API_KEY,
@@ -38,12 +38,14 @@ class SearchPresenter(val context: Context, val iBaseView: IBaseView) {
         observable
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+            .distinct()
             .subscribe(object : Observer<MoviesResponse> {
                 override fun onSubscribe(d: Disposable) {
 
                 }
 
                 override fun onNext(moviesResponse: MoviesResponse) {
+                    movieList = ArrayList()
                     iBaseView.setVisibilityProgressBar(View.GONE)
                     if (moviesResponse.results != null) {
                         movieList!!.addAll(moviesResponse.results!!)
@@ -59,10 +61,18 @@ class SearchPresenter(val context: Context, val iBaseView: IBaseView) {
                                 position: Int
                             ) {
                                 holder.bind(context, model)
-                                holder.setClick(moviesResponse, context)
+                                holder.setClick(object : OnRecyclerViewItemClickListener {
+                                    override fun onItemClick(position: Int) {
+                                        val activity = context as SearchActivity
+                                        val intent = Intent()
+                                        intent.putExtra("MovieId", movieList!![position].id.toString())
+                                        intent.putExtra("MovieTitle", movieList!![position].title!!)
+                                        activity.setResult(RESULT_OK, intent)
+                                        activity.finish()
+                                    }
+                                })
                             }
                         }
-
                         iBaseView.setRecyclerViewAdapter(adapter!!)
                     } else {
                         Toast.makeText(context, context.getString(R.string.s_there_are_no_elements), Toast.LENGTH_LONG)
@@ -84,8 +94,7 @@ class SearchPresenter(val context: Context, val iBaseView: IBaseView) {
 
     fun clearAdapter() {
         if (adapter != null) {
-            movieList!!.clear()
-            adapter!!.notifyDataSetChanged()
+            adapter!!.clear()
         }
     }
 }

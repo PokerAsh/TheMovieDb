@@ -2,6 +2,7 @@ package com.yernarkt.themoviedb.ui.fragment
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -9,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.yernarkt.themoviedb.R
-import com.yernarkt.themoviedb.ui.activities.MovieBaseActivity
 import com.yernarkt.themoviedb.util.MOVIE_ID
 import com.yernarkt.themoviedb.util.MOVIE_TITLE
 import com.yernarkt.themoviedb.view.MovieDetailPresenter
@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.fragment_movie_detail.*
 import timber.log.Timber
 
 class MovieDetailFragment : Fragment(), MovieDetailView {
-    private lateinit var appCompatActivity: MovieBaseActivity
+    private lateinit var appCompatActivity: AppCompatActivity
     private lateinit var mView: View
     private var presenter: MovieDetailPresenter? = null
     private var movieTitle: String? = null
@@ -38,7 +38,7 @@ class MovieDetailFragment : Fragment(), MovieDetailView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        appCompatActivity = context as MovieBaseActivity
+        appCompatActivity = context as AppCompatActivity
 
         val bundle = arguments
         if (bundle != null) {
@@ -56,23 +56,6 @@ class MovieDetailFragment : Fragment(), MovieDetailView {
     }
 
     private fun setSupportToolbar() {
-        try {
-            val f = appCompatActivity.supportActionBar!!::class.java.getDeclaredField("mTitleTextView")
-            f.isAccessible = true
-            val titleTextView = f.get(appCompatActivity.supportActionBar!!) as TextView
-            titleTextView.ellipsize = TextUtils.TruncateAt.MARQUEE
-            titleTextView.isFocusable = true
-            titleTextView.isFocusableInTouchMode = true
-            titleTextView.requestFocus()
-            titleTextView.setSingleLine(true)
-            titleTextView.isSelected = true
-            titleTextView.marqueeRepeatLimit = -1
-        } catch (e: NoSuchFieldException) {
-            e.printStackTrace()
-        } catch (e: IllegalAccessException) {
-            e.printStackTrace()
-        }
-
         appCompatActivity.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         appCompatActivity.supportActionBar!!.title = movieTitle
     }

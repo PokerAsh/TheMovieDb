@@ -2,12 +2,13 @@ package com.yernarkt.themoviedb.util.custom
 
 import android.content.Context
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.AppCompatEditText
 import android.util.AttributeSet
 import android.widget.EditText
 import com.yernarkt.themoviedb.R
 
 class CustomSearchBar(context: Context, attrs: AttributeSet) : TransformingToolbar(context, attrs) {
-    private var editText: EditText? = null
+    private var editText: AppCompatEditText? = null
 
     init {
         setBackgroundColor(ContextCompat.getColor(context, R.color.white))

@@ -16,12 +16,13 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import com.bumptech.glide.request.transition.Transition
 import com.yernarkt.themoviedb.R
-import com.yernarkt.themoviedb.model.MoviesResponse
 import com.yernarkt.themoviedb.model.MoviesResult
-import com.yernarkt.themoviedb.ui.fragment.MovieDetailFragment
 import com.yernarkt.themoviedb.util.BASE_IMAGE_URL
+import com.yernarkt.themoviedb.util.OnRecyclerViewItemClickListener
 
-class MoviesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class MoviesViewHolder(itemView: View) :
+    RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    private var onRecyclerViewItemClickListener: OnRecyclerViewItemClickListener? = null
     private var moviesPoster: ImageView = itemView.findViewById(R.id.movieImageView)
     private var moviesView: View = itemView.findViewById(R.id.movieViewBackground)
     private var moviesName: TextView = itemView.findViewById(R.id.movieNameText)
@@ -46,24 +47,16 @@ class MoviesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                             .generate { palette -> setBackgroundColor(context as AppCompatActivity, palette!!) }
                     }
                 })
+
+        itemView.setOnClickListener(this)
     }
 
-    fun setClick(data: MoviesResponse, context: Context) {
-        val pos = adapterPosition
-        val movieResult = data.results!![pos]
-        itemView.setOnClickListener {
-            if (pos != RecyclerView.NO_POSITION) {
-                val activity = context as AppCompatActivity
-                activity.supportFragmentManager
-                    .beginTransaction()
-                    .replace(
-                        R.id.activity_container,
-                        MovieDetailFragment.newInstance(movieResult.id.toString(), movieResult.title!!)
-                    )
-                    .addToBackStack("movie_list")
-                    .commit()
-            }
-        }
+    fun setClick(onRecyclerViewItemClickListener: OnRecyclerViewItemClickListener){
+        this.onRecyclerViewItemClickListener = onRecyclerViewItemClickListener
+    }
+
+    override fun onClick(v: View?) {
+        onRecyclerViewItemClickListener!!.onItemClick(adapterPosition)
     }
 
     private fun setBackgroundColor(context: AppCompatActivity, palette: Palette) {

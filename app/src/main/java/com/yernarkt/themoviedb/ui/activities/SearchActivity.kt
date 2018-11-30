@@ -21,6 +21,11 @@ import com.yernarkt.themoviedb.util.transition.FadeOutTransition
 import com.yernarkt.themoviedb.util.transition.SimpleTransitionListener
 import com.yernarkt.themoviedb.view.IBaseView
 import com.yernarkt.themoviedb.view.SearchPresenter
+import io.reactivex.Observable
+import io.reactivex.ObservableOnSubscribe
+import io.reactivex.disposables.Disposable
+import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 class SearchActivity : SomeUtilityActivity(), IBaseView {
     private var searchbar: CustomSearchBar? = null
@@ -28,6 +33,7 @@ class SearchActivity : SomeUtilityActivity(), IBaseView {
     private var searchProgressBar: ProgressBar? = null
     private var searchRecyclerView: RecyclerView? = null
     private var searchPresenter: SearchPresenter? = null
+    private var observable: Disposable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,20 +62,30 @@ class SearchActivity : SomeUtilityActivity(), IBaseView {
     }
 
     private fun searchMovies() {
-        searchMoviesText!!.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
+        observable = Observable.create(ObservableOnSubscribe<String> { subscriber ->
+            searchMoviesText!!.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {
+                }
 
-            }
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                }
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (count > 1)
-                    searchPresenter!!.searchEngine(s)
-            }
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    if (s != null) {
+                        subscriber.onNext(s.toString())
+                    } else {
+                        subscriber.onError(IOException())
+                    }
+                }
+            })
         })
+            .map { text -> text.toLowerCase().trim() }
+            .debounce(250, TimeUnit.MILLISECONDS)
+            .distinct()
+            .filter { text -> text.isNotBlank() }
+            .subscribe { text ->
+                searchPresenter!!.searchEngine(text)
+            }
     }
 
     private fun initViews() {
@@ -85,6 +101,11 @@ class SearchActivity : SomeUtilityActivity(), IBaseView {
 
     private fun isFirstTimeRunning(savedInstanceState: Bundle?): Boolean {
         return savedInstanceState == null
+    }
+
+    override fun onPause() {
+        super.onPause()
+        observable!!.dispose()
     }
 
     override fun finish() {
@@ -114,15 +135,17 @@ class SearchActivity : SomeUtilityActivity(), IBaseView {
     }
 
     override fun setVisibilityProgressBar(visibility: Int) {
-        when (visibility) {
-            View.GONE -> {
-                searchProgressBar!!.visibility = View.GONE
-                searchRecyclerView!!.visibility = View.VISIBLE
-                Handler().postDelayed({ searchRecyclerView!!.scrollToPosition(0) }, 200)
-            }
-            View.VISIBLE -> {
-                searchProgressBar!!.visibility = View.VISIBLE
-                searchRecyclerView!!.visibility = View.GONE
+        runOnUiThread {
+            when (visibility) {
+                View.GONE -> {
+                    searchProgressBar!!.visibility = View.GONE
+                    searchRecyclerView!!.visibility = View.VISIBLE
+                    Handler().postDelayed({ searchRecyclerView!!.scrollToPosition(0) }, 200)
+                }
+                View.VISIBLE -> {
+                    searchProgressBar!!.visibility = View.VISIBLE
+                    searchRecyclerView!!.visibility = View.GONE
+                }
             }
         }
     }

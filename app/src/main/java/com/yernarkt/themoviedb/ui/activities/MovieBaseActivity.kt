@@ -1,7 +1,9 @@
 package com.yernarkt.themoviedb.ui.activities
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.support.design.widget.AppBarLayout
 import android.support.v7.widget.Toolbar
 import android.transition.Transition
@@ -9,13 +11,17 @@ import android.transition.TransitionManager
 import android.view.Menu
 import android.view.MenuItem
 import com.yernarkt.themoviedb.R
+import com.yernarkt.themoviedb.ui.fragment.MovieDetailFragment
 import com.yernarkt.themoviedb.ui.fragment.MoviesBaseFragment
+import com.yernarkt.themoviedb.util.REQUEST_CODE_SEARCH_ACTIVITY
 import com.yernarkt.themoviedb.util.transition.FadeInTransition
 import com.yernarkt.themoviedb.util.transition.FadeOutTransition
 import com.yernarkt.themoviedb.util.transition.SimpleTransitionListener
 
 class MovieBaseActivity : SomeUtilityActivity() {
     private var mainToolbar: Toolbar? = null
+    private var movieId: String? = null
+    private var movieTitle: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,10 +41,20 @@ class MovieBaseActivity : SomeUtilityActivity() {
     override fun onResume() {
         super.onResume()
         fadeToolbarIn()
-    }
 
-    fun getToolbar(): Toolbar{
-        return mainToolbar!!
+        if (movieId != null) {
+            supportFragmentManager
+                .beginTransaction()
+                .replace(
+                    R.id.activity_container,
+                    MovieDetailFragment.newInstance(
+                        movieId!!,
+                        movieTitle!!
+                    )
+                )
+                .addToBackStack(null)
+                .commit()
+        }
     }
 
     private fun fadeToolbarIn() {
@@ -61,10 +77,20 @@ class MovieBaseActivity : SomeUtilityActivity() {
         return object : SimpleTransitionListener() {
             override fun onTransitionEnd(transition: Transition) {
                 val intent = Intent(this@MovieBaseActivity, SearchActivity::class.java)
-                startActivity(intent)
+                startActivityForResult(intent, REQUEST_CODE_SEARCH_ACTIVITY)
                 overridePendingTransition(0, 0)
             }
         }
+    }
+
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_SEARCH_ACTIVITY && data != null) {
+            movieId = data.getStringExtra("MovieId")
+            movieTitle = data.getStringExtra("MovieTitle")
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

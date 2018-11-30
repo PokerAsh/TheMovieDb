@@ -8,5 +8,4 @@
     android:enabled="true"
     android:title="clear"
     app:showAsAction="always" />
-
 </menu>
