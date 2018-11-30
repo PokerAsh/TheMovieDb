@@ -78,7 +78,6 @@ class MoviesListFragment : Fragment(), IBaseView {
     }
 
     private fun setupTitle() {
-        appCompatBaseActivity.supportActionBar!!.title = resources.getString(R.string.s_movies)
         if (movieType == "Genre") {
             appCompatBaseActivity.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         }

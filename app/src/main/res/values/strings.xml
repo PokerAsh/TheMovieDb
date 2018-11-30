@@ -1,13 +1,13 @@
 <resources>
-    <string name="app_name">The Movie Db</string>
-    <string name="s_movies">Фильмы</string>
-    <string name="s_genres">Жанры</string>
-    <string name="s_popular">Популярные</string>
-    <string name="s_soon">Скоро на экранах</string>
-    <string name="s_movie_poster">Постер фильма</string>
-    <string name="s_there_are_no_elements">Найдено ничего</string>
-    <string name="s_on_failure_message">Произошла ошибка на сервере</string>
-    <string name="string_internet_connection_warning">Интернет не подключен</string>
+    <string name="app_name" translatable="false">The Movie Db</string>
+    <string name="s_movies" translatable="false">Фильмы</string>
+    <string name="s_genres" translatable="false">Жанры</string>
+    <string name="s_popular" translatable="false">Популярные</string>
+    <string name="s_soon" translatable="false">Скоро на экранах</string>
+    <string name="s_movie_poster" translatable="false">Постер фильма</string>
+    <string name="s_there_are_no_elements" translatable="false">Найдено ничего</string>
+    <string name="s_on_failure_message" translatable="false">Произошла ошибка на сервере</string>
+    <string name="string_internet_connection_warning" translatable="false">Интернет не подключен</string>
     <string name="s_search">Искать</string>
     <string name="s_search_movies">Искать фильм</string>
     <string name="s_no_overview">Нет описания к фильму</string>

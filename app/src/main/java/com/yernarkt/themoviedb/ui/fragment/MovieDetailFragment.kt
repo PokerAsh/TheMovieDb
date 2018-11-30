@@ -10,6 +10,8 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.ProgressBar
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -29,10 +31,12 @@ import timber.log.Timber
 class MovieDetailFragment : Fragment(), MovieDetailView {
     private lateinit var appCompatActivity: MovieBaseActivity
     private lateinit var mView: View
+    private var detailProgressBar: ProgressBar? = null
     private var presenter: MovieDetailPresenter? = null
     private var movieTitle: String? = null
     private var movieId: String? = null
     private var detailMovieList: RecyclerView? = null
+    private var detailImageView: ImageView? = null
     private var snackBar: Snackbar? = null
 
     companion object {
@@ -62,13 +66,15 @@ class MovieDetailFragment : Fragment(), MovieDetailView {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mView = inflater.inflate(R.layout.fragment_movie_detail, container, false)
         setSupportToolbar()
+        detailProgressBar = mView.findViewById(R.id.detailProgressBar)
+        detailImageView = mView.findViewById(R.id.detailImageView)
         return mView
     }
 
 
     private fun setSupportToolbar() {
         appCompatActivity.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        appCompatActivity.supportActionBar!!.title = movieTitle
+        appCompatActivity.supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_action_back)
     }
 
     override fun onResume() {
@@ -133,7 +139,7 @@ class MovieDetailFragment : Fragment(), MovieDetailView {
                 .asBitmap()
                 .load(String.format("%s%s", BASE_IMAGE_URL, data.posterPath))
                 .apply(options)
-                .into(detailImageView)
+                .into(detailImageView!!)
 
         detailDescription!!.text =
                 if (!data.overview!!.isEmpty()) data.overview!! else getString(R.string.s_no_overview)

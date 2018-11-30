@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
-import android.support.design.widget.AppBarLayout
+import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.Toolbar
 import android.transition.Transition
 import android.transition.TransitionManager
@@ -23,6 +23,7 @@ class MovieBaseActivity : SomeUtilityActivity() {
     private var mainToolbar: Toolbar? = null
     private var movieId: String? = null
     private var movieTitle: String? = null
+    private var toolbarMargin: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +38,15 @@ class MovieBaseActivity : SomeUtilityActivity() {
     private fun initViews() {
         mainToolbar = findViewById(R.id.mainToolbar)
         setSupportActionBar(mainToolbar)
+        supportActionBar!!.title = "Поиск"
+        supportActionBar!!.setLogo(R.drawable.ic_action_search)
+
+        toolbarMargin = resources.getDimensionPixelSize(R.dimen.toolbarMargin)
+
+        mainToolbar!!.setOnClickListener {
+            showKeyboard()
+            transitionToSearch()
+        }
     }
 
     override fun onResume() {
@@ -60,8 +70,8 @@ class MovieBaseActivity : SomeUtilityActivity() {
 
     private fun fadeToolbarIn() {
         TransitionManager.beginDelayedTransition(mainToolbar, FadeInTransition.createTransition())
-        val layoutParams = mainToolbar!!.layoutParams as AppBarLayout.LayoutParams
-        layoutParams.setMargins(8, 8, 8, 8)
+        val layoutParams = mainToolbar!!.layoutParams as ConstraintLayout.LayoutParams
+        layoutParams.setMargins(48, toolbarMargin, toolbarMargin, toolbarMargin)
         mainToolbar!!.layoutParams = layoutParams
     }
 
@@ -69,7 +79,7 @@ class MovieBaseActivity : SomeUtilityActivity() {
         val transition = FadeOutTransition.withAction(navigateToSearchWhenDone())
 
         TransitionManager.beginDelayedTransition(mainToolbar, transition)
-        val frameLP = mainToolbar!!.layoutParams as AppBarLayout.LayoutParams
+        val frameLP = mainToolbar!!.layoutParams as ConstraintLayout.LayoutParams
         frameLP.setMargins(0, 0, 0, 0)
         mainToolbar!!.layoutParams = frameLP
     }
@@ -100,11 +110,7 @@ class MovieBaseActivity : SomeUtilityActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.main_action_search) {
-            showKeyboard()
-            transitionToSearch()
-            return true
-        } else if (item.itemId == R.id.main_action_filter) {
+        if (item.itemId == R.id.main_action_filter) {
             MoviesSortDialogFragment.newInstance().show(supportFragmentManager, "filter")
             return true
         }

@@ -34,7 +34,6 @@ class GenresListFragment : Fragment(), IBaseView {
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         appCompatActivity = context as AppCompatActivity
-        appCompatActivity.supportActionBar!!.title = resources.getString(R.string.s_genres)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
