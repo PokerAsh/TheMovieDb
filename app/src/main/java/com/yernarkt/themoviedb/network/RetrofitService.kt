@@ -11,6 +11,7 @@ import io.reactivex.Observable
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.QueryMap
 
 interface RetrofitService {
     @GET(MOVIE_POPULAR)
@@ -24,8 +25,7 @@ interface RetrofitService {
     fun getUpcomingMovieList(
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
-        @Query("page") page: Int,
-        @Query("region") region: String
+        @Query("page") page: Int
     ): Observable<UpcomingMoviesResponse>
 
     @GET(DISCOVER_MOVIE)
@@ -35,6 +35,15 @@ interface RetrofitService {
         @Query("sort_by") sortBy: String,
         @Query("page") page: Int,
         @Query("with_genres") genreId: String
+    ): Observable<MoviesResponse>
+
+    @GET(DISCOVER_MOVIE)
+    fun getSortedMovies(
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String,
+        @Query("sort_by") sortBy: String,
+        @Query("page") page: Int,
+        @QueryMap queryMap: MutableMap<String, String>
     ): Observable<MoviesResponse>
 
     @GET(GENRE_MOVIE_LIST)

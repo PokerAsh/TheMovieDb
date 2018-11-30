@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
+import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -25,7 +26,6 @@ import com.yernarkt.themoviedb.util.MOVIE_ID
 import com.yernarkt.themoviedb.util.MOVIE_TITLE
 import com.yernarkt.themoviedb.view.MovieDetailPresenter
 import com.yernarkt.themoviedb.view.MovieDetailView
-import kotlinx.android.synthetic.main.fragment_movie_detail.*
 import timber.log.Timber
 
 class MovieDetailFragment : Fragment(), MovieDetailView {
@@ -37,6 +37,8 @@ class MovieDetailFragment : Fragment(), MovieDetailView {
     private var movieId: String? = null
     private var detailMovieList: RecyclerView? = null
     private var detailImageView: ImageView? = null
+    private var detailActors: AppCompatTextView? = null
+    private var detailDescription: AppCompatTextView? = null
     private var snackBar: Snackbar? = null
 
     companion object {
@@ -66,8 +68,6 @@ class MovieDetailFragment : Fragment(), MovieDetailView {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mView = inflater.inflate(R.layout.fragment_movie_detail, container, false)
         setSupportToolbar()
-        detailProgressBar = mView.findViewById(R.id.detailProgressBar)
-        detailImageView = mView.findViewById(R.id.detailImageView)
         return mView
     }
 
@@ -102,6 +102,10 @@ class MovieDetailFragment : Fragment(), MovieDetailView {
 
     private fun initViews() {
         detailMovieList = mView.findViewById(R.id.detailSimilarMoviesList)
+        detailProgressBar = mView.findViewById(R.id.detailProgressBar)
+        detailImageView = mView.findViewById(R.id.detailImageView)
+        detailActors = mView.findViewById(R.id.detailActors)
+        detailDescription = mView.findViewById(R.id.detailDescription)
     }
 
     private fun initPresenter() {

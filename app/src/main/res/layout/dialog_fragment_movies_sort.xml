@@ -5,46 +5,52 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    <android.support.design.widget.TextInputLayout android:layout_width="0dp"
-                                                   android:layout_height="wrap_content"
-                                                   app:layout_constraintStart_toStartOf="parent"
-                                                   android:layout_marginStart="24dp" android:id="@+id/textInputLayout"
-                                                   android:layout_marginTop="24dp"
-                                                   app:layout_constraintTop_toTopOf="parent"
-                                                   app:layout_constraintHorizontal_bias="0.5"
-                                                   app:layout_constraintEnd_toStartOf="@+id/textInputLayout2"
-                                                   app:layout_constraintHorizontal_chainStyle="spread"
-                                                   android:layout_marginEnd="12dp">
+    <android.support.design.widget.TextInputLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="24dp" android:id="@+id/startYearTil"
+            android:layout_marginTop="24dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toStartOf="@+id/endYearTil"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            android:layout_marginEnd="12dp">
 
-        <android.support.design.widget.TextInputEditText android:layout_width="match_parent"
-                                                         android:layout_height="wrap_content"
-                                                         android:hint="@string/s_year_start"
-                                                         android:maxLength="4"
-                                                         android:textSize="16sp"
-                                                         android:textColorHint="@color/colorPrimary"
-                                                         android:digits="1234567890"
-                                                         android:inputType="text|numberDecimal"/>
+        <android.support.design.widget.TextInputEditText
+                android:id="@+id/startYearText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/s_year_start"
+                android:maxLength="4"
+                android:textSize="16sp"
+                android:textColorHint="@color/colorPrimary"
+                android:digits="1234567890"
+                android:inputType="text|numberDecimal"/>
     </android.support.design.widget.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout android:layout_width="0dp"
-                                                   android:layout_height="wrap_content"
-                                                   android:layout_marginEnd="24dp"
-                                                   app:layout_constraintEnd_toEndOf="parent"
-                                                   android:layout_marginTop="24dp"
-                                                   app:layout_constraintTop_toTopOf="parent"
-                                                   android:id="@+id/textInputLayout2"
-                                                   app:layout_constraintStart_toEndOf="@+id/textInputLayout"
-                                                   app:layout_constraintHorizontal_bias="0.5"
-                                                   android:layout_marginStart="12dp">
+    <android.support.design.widget.TextInputLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="24dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/endYearTil"
+            app:layout_constraintStart_toEndOf="@+id/startYearTil"
+            app:layout_constraintHorizontal_bias="0.5"
+            android:layout_marginStart="12dp">
 
-        <android.support.design.widget.TextInputEditText android:layout_width="match_parent"
-                                                         android:layout_height="wrap_content"
-                                                         android:hint="@string/s_year_end"
-                                                         android:maxLength="4"
-                                                         android:textSize="16sp"
-                                                         android:textColorHint="@color/colorPrimary"
-                                                         android:digits="1234567890"
-                                                         android:inputType="text|numberDecimal"/>
+        <android.support.design.widget.TextInputEditText
+                android:id="@+id/endYearText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/s_year_end"
+                android:maxLength="4"
+                android:textSize="16sp"
+                android:textColorHint="@color/colorPrimary"
+                android:digits="1234567890"
+                android:inputType="text|numberDecimal"/>
     </android.support.design.widget.TextInputLayout>
 
     <TextView android:layout_width="0dp" android:layout_height="wrap_content"
@@ -52,7 +58,7 @@
               android:layout_marginStart="24dp" android:layout_marginEnd="24dp"
               android:textColor="@color/colorPrimary"
               app:layout_constraintEnd_toEndOf="parent" android:layout_marginTop="24dp"
-              app:layout_constraintTop_toBottomOf="@+id/textInputLayout" android:id="@+id/textView4"
+              app:layout_constraintTop_toBottomOf="@+id/startYearTil" android:id="@+id/textView4"
               android:text="@string/s_choose_genre" android:textSize="14sp"/>
     <Spinner
             android:layout_width="0dp"

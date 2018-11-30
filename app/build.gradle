@@ -71,6 +71,7 @@ dependencies {
     annotationProcessor "com.github.bumptech.glide:compiler:$glide_version"
     //JodaTime
     implementation 'net.danlew:android.joda:2.10.1'
+    implementation 'com.facebook.shimmer:shimmer:0.3.0'
     //Логи
     implementation 'com.jakewharton.timber:timber:4.7.1'
     testImplementation 'junit:junit:4.12'

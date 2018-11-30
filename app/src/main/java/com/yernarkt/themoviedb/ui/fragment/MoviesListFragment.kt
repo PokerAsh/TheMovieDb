@@ -13,9 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import com.yernarkt.themoviedb.R
-import com.yernarkt.themoviedb.util.GENRE_ID
-import com.yernarkt.themoviedb.util.InternetConnection
-import com.yernarkt.themoviedb.util.MOVIE_TYPE
+import com.yernarkt.themoviedb.util.*
 import com.yernarkt.themoviedb.view.IBaseView
 import com.yernarkt.themoviedb.view.MoviesPresenter
 
@@ -28,8 +26,10 @@ class MoviesListFragment : Fragment(), IBaseView {
 
     private var snackBar: Snackbar? = null
     private var page = PAGE_NUMBER
-    private lateinit var movieType: String
-    private lateinit var genreId: String
+    private var movieType: String? = null
+    private var genreId: String? = null
+    private var startYear: String? = null
+    private var endYear: String? = null
 
     companion object {
         private const val PAGE_NUMBER: Int = 1
@@ -50,6 +50,17 @@ class MoviesListFragment : Fragment(), IBaseView {
             fragment.arguments = bundle
             return fragment
         }
+
+        fun newInstance(movieType: String, genreId: String?, startYear: String, endYear: String): MoviesListFragment {
+            val fragment = MoviesListFragment()
+            val bundle = Bundle()
+            bundle.putString(MOVIE_TYPE, movieType)
+            bundle.putString(GENRE_ID, genreId)
+            bundle.putString(START_YEAR, startYear)
+            bundle.putString(END_YEAR, endYear)
+            fragment.arguments = bundle
+            return fragment
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,6 +72,8 @@ class MoviesListFragment : Fragment(), IBaseView {
         if (bundle != null) {
             movieType = bundle.getString(MOVIE_TYPE, "Popular")
             genreId = bundle.getString(GENRE_ID, "0")
+            startYear = bundle.getString(START_YEAR, "2018-01-01")
+            endYear = bundle.getString(END_YEAR, "2019-01-01")
         }
     }
 
@@ -78,30 +91,30 @@ class MoviesListFragment : Fragment(), IBaseView {
     }
 
     private fun setupTitle() {
-        if (movieType == "Genre") {
+        if (movieType == "Genre" || movieType == "Sorted") {
             appCompatBaseActivity.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         }
     }
 
     override fun onResume() {
         super.onResume()
-        loadMovies(page)
+        loadMovies()
     }
 
-    private fun loadMovies(page: Int) {
+    private fun loadMovies() {
         snackBar = Snackbar.make(mView, R.string.string_internet_connection_warning, Snackbar.LENGTH_INDEFINITE)
         snackBar!!.setAction("Понятно") {
             snackBar!!.dismiss()
         }
         if (InternetConnection.checkConnection(appCompatBaseActivity)) {
-            loadMovieType(page, movieType)
+            loadMovieType()
         } else {
             snackBar!!.show()
         }
     }
 
-    private fun loadMovieType(page: Int, movieType: String) {
-        presenter.loadMovies(page, movieType, genreId)
+    private fun loadMovieType() {
+        presenter.loadMovies(page, movieType!!, genreId!!, startYear!!, endYear!!)
     }
 
     private fun initPresenter() {

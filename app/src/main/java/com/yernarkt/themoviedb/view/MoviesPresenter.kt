@@ -29,12 +29,16 @@ class MoviesPresenter(
     private var movieList: ArrayList<MoviesResult>? = null
     private var adapter: MoviesAdapter<MoviesResult, MoviesViewHolder>? = null
 
-    fun loadMovies(page: Int, movieType: String, genreId: String) {
+    fun loadMovies(
+        page: Int, movieType: String, genreId: String, startYear: String,
+        endYear: String
+    ) {
         movieList = ArrayList()
         baseView.setVisibilityProgressBar(View.VISIBLE)
         val observable = when (movieType) {
             "Popular" -> generateMovieResponse(page)
             "Genre" -> generateByGenreMovieResponse(genreId, page)
+            "Sorted" -> generateSortedMovieResponse(startYear, endYear, genreId, page)
             else -> {
                 generateUpcomingMoviesResponse(page)
             }
@@ -107,8 +111,7 @@ class MoviesPresenter(
         return ServiceGenerator.getRetrofitService().getUpcomingMovieList(
             API_KEY,
             LANGUAGE,
-            page,
-            REGION
+            page
         )
     }
 
@@ -124,9 +127,40 @@ class MoviesPresenter(
         return ServiceGenerator.getRetrofitService().getMoviesByGenre(
             API_KEY,
             LANGUAGE,
-            SORT_BY,
+            SORT_BY_POPULARITY_DESC,
             page,
             genreId
         )
+    }
+
+    private fun generateSortedMovieResponse(
+        startYear: String,
+        endYear: String,
+        genreId: String,
+        page: Int
+    ): Observable<MoviesResponse> {
+        return ServiceGenerator.getRetrofitService().getSortedMovies(
+            API_KEY,
+            LANGUAGE,
+            SORT_BY_PRIMARY_RELEASE_DATE_DESC,
+            page,
+            getAdditionalFieldForQueryResponse(
+                startYear,
+                endYear,
+                genreId
+            )
+        )
+    }
+
+    private fun getAdditionalFieldForQueryResponse(
+        startYear: String,
+        endYear: String,
+        genreId: String
+    ): HashMap<String, String> {
+        val map = HashMap<String, String>()
+        map["primary_release_date.gte"] = startYear
+        map["primary_release_date.lte"] = endYear
+        map["with_genres"] = genreId
+        return map
     }
 }
