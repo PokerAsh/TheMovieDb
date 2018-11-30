@@ -10,4 +10,9 @@
     <string name="string_internet_connection_warning">Интернет не подключен</string>
     <string name="s_search">Искать</string>
     <string name="s_search_movies">Искать фильм</string>
+    <string name="s_no_overview">Нет описания к фильму</string>
+    <string name="s_no_credits">Не было найдено ни одного актера</string>
+    <string name="s_credits">Актеры</string>
+    <string name="s_overview">Краткое описание</string>
+    <string name="s_similar_movies">Похожие фильмы</string>
 </resources>

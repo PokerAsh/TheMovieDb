@@ -30,6 +30,9 @@ android {
         it.buildConfigField 'String', 'GENRE_MOVIE_LIST', GENRE_MOVIE_LIST
         it.buildConfigField 'String', 'DISCOVER_MOVIE', DISCOVER_MOVIE
         it.buildConfigField 'String', 'SEARCH_MOVIE', SEARCH_MOVIE
+        it.buildConfigField 'String', 'MOVIE_BY_ID', MOVIE_BY_ID
+        it.buildConfigField 'String', 'MOVIE_CREDITS', MOVIE_CREDITS
+        it.buildConfigField 'String', 'MOVIE_SIMILAR', MOVIE_SIMILAR
     }
 
     compileOptions {

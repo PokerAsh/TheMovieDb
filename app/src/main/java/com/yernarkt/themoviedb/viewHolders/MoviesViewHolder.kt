@@ -17,6 +17,7 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget
 import com.bumptech.glide.request.transition.Transition
 import com.yernarkt.themoviedb.R
 import com.yernarkt.themoviedb.model.MoviesResult
+import com.yernarkt.themoviedb.model.detail.SimilarMoviesResult
 import com.yernarkt.themoviedb.util.BASE_IMAGE_URL
 import com.yernarkt.themoviedb.util.OnRecyclerViewItemClickListener
 
@@ -28,6 +29,30 @@ class MoviesViewHolder(itemView: View) :
     private var moviesName: TextView = itemView.findViewById(R.id.movieNameText)
 
     fun bind(context: Context, data: MoviesResult) {
+        moviesName.text = data.title
+        val options = RequestOptions()
+            .centerCrop()
+            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+            .error(R.drawable.ic_no_image)
+            .priority(Priority.HIGH)
+
+        if (data.posterPath != null)
+            Glide.with(context)
+                .asBitmap()
+                .load(String.format("%s%s", BASE_IMAGE_URL, data.posterPath))
+                .apply(options)
+                .into(object : BitmapImageViewTarget(moviesPoster) {
+                    override fun onResourceReady(bitmap: Bitmap, transition: Transition<in Bitmap>?) {
+                        super.onResourceReady(bitmap, transition)
+                        Palette.from(bitmap)
+                            .generate { palette -> setBackgroundColor(context as AppCompatActivity, palette!!) }
+                    }
+                })
+
+        itemView.setOnClickListener(this)
+    }
+
+    fun bind(context: Context, data: SimilarMoviesResult){
         moviesName.text = data.title
         val options = RequestOptions()
             .centerCrop()

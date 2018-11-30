@@ -2,8 +2,8 @@
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:background="@color/white"
-        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:background="@color/white" android:layout_width="match_parent"
         android:layout_height="match_parent">
 
     <ProgressBar
@@ -25,7 +25,7 @@
             <ImageView
                     android:id="@+id/detailImageView"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="400dp"
                     android:contentDescription="@null"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -53,10 +53,19 @@
                     app:layout_constraintTop_toBottomOf="@+id/detailDivider"
                     android:layout_marginTop="8dp">
 
+                <TextView
+                        android:text="@string/s_credits"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/textView"
+                        android:layout_gravity="end" android:textStyle="bold"/>
                 <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/detailActors"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:maxLines="3"
+                        android:textAlignment="center"
+                        android:ellipsize="end"
                         android:padding="16dp"/>
 
                 <View
@@ -65,6 +74,11 @@
                         android:background="@color/colorPrimary"
                         android:layout_height="4dp"/>
 
+                <TextView
+                        android:text="@string/s_overview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/textView2"
+                        android:layout_gravity="end" android:textStyle="bold"/>
                 <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/detailDescription"
                         android:layout_width="match_parent"
@@ -72,6 +86,23 @@
                         android:textSize="12sp"
                         tools:text="В конце первого фильма могущественный темный волшебник Геллерт Грин-де-Вальд был пойман сотрудниками МАКУСА (Магического Конгресса Управления по Северной Америке), не без помощи Ньюта Саламандера. Выполняя свое обещание, темный маг устраивает грандиозный побег и начинает собирать сторонников, большинство из которых не знают о его истинной цели: добиться превосходства волшебников над всеми немагическими существами на планете. Чтобы сорвать планы Грин-де-Вальда, Альбус Дамблдор обращается к своему бывшему студенту Ньюту Саламандеру, который соглашается помочь, не подозревая, какая опасность ему грозит. В раскалывающемся на части волшебном мире любовь и верность проверяются на прочность, а конфликт разделяет даже настоящих друзей и членов семей."
                         android:padding="16dp" android:textAlignment="center"/>
+
+                <View
+                        android:id="@+id/v_divider2"
+                        android:layout_width="match_parent"
+                        android:background="@color/colorPrimary"
+                        android:layout_height="4dp"/>
+
+                <TextView
+                        android:text="@string/s_similar_movies"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/textView3" android:textStyle="bold"
+                        android:layout_gravity="end"/>
+                <android.support.v7.widget.RecyclerView
+                        android:id="@+id/detailSimilarMoviesList"
+                        android:layout_width="match_parent"
+                        android:scrollbars="horizontal"
+                        android:layout_height="match_parent"/>
             </LinearLayout>
         </android.support.constraint.ConstraintLayout>
     </ScrollView>

@@ -10,3 +10,6 @@ const val MOVIE_UPCOMING = BuildConfig.MOVIE_UPCOMING
 const val GENRE_MOVIE_LIST = BuildConfig.GENRE_MOVIE_LIST
 const val DISCOVER_MOVIE = BuildConfig.DISCOVER_MOVIE
 const val SEARCH_MOVIE = BuildConfig.SEARCH_MOVIE
+const val MOVIE_BY_ID = BuildConfig.MOVIE_BY_ID
+const val MOVIE_CREDITS = BuildConfig.MOVIE_CREDITS
+const val MOVIE_SIMILAR = BuildConfig.MOVIE_SIMILAR

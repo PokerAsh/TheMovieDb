@@ -1,11 +1,15 @@
 package com.yernarkt.themoviedb.network
 
 import com.yernarkt.themoviedb.model.MoviesResponse
+import com.yernarkt.themoviedb.model.detail.MovieCreditsResult
+import com.yernarkt.themoviedb.model.detail.MovieResultDetail
+import com.yernarkt.themoviedb.model.detail.SimilarMoviesResponse
 import com.yernarkt.themoviedb.model.genres.GenreResponse
 import com.yernarkt.themoviedb.model.upcoming.UpcomingMoviesResponse
 import com.yernarkt.themoviedb.util.*
 import io.reactivex.Observable
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface RetrofitService {
@@ -45,4 +49,24 @@ interface RetrofitService {
         @Query("query") query: CharSequence?,
         @Query("page") page: Int
     ): Observable<MoviesResponse>
+
+    @GET(MOVIE_BY_ID)
+    fun getMovieById(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
+    ): Observable<MovieResultDetail>
+
+    @GET(MOVIE_CREDITS)
+    fun getMovieCredits(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String
+    ): Observable<MovieCreditsResult>
+
+    @GET(MOVIE_SIMILAR)
+    fun getSimilarMovies(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
+    ): Observable<SimilarMoviesResponse>
 }
