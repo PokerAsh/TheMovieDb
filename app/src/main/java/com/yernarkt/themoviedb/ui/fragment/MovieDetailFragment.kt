@@ -4,10 +4,8 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
-import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -137,11 +135,12 @@ class MovieDetailFragment : Fragment(), MovieDetailView {
                 .apply(options)
                 .into(detailImageView)
 
-        detailDescription!!.text = if (!data.overview!!.isEmpty())data.overview!! else getString(R.string.s_no_overview)
+        detailDescription!!.text =
+                if (!data.overview!!.isEmpty()) data.overview!! else getString(R.string.s_no_overview)
     }
 
     override fun setMovieCredit(cast: String) {
-        detailActors!!.text = if(!cast.isEmpty())cast else getString(R.string.s_no_credits)
+        detailActors!!.text = if (!cast.isEmpty()) cast else getString(R.string.s_no_credits)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {

@@ -45,7 +45,15 @@ class MovieDetailPresenter(
                 }
 
                 override fun onNext(data: MovieResultDetail) {
-                    detailView.setMovieDetail(data)
+                    val result: MovieResultDetail? = data
+                    if (result != null)
+                        detailView.setMovieDetail(data)
+                    else
+                        Snackbar.make(
+                            mView,
+                            context.getString(R.string.s_something_went_wrong),
+                            Snackbar.LENGTH_LONG
+                        ).show()
                 }
 
                 override fun onError(e: Throwable) {
@@ -75,7 +83,15 @@ class MovieDetailPresenter(
                 }
 
                 override fun onNext(data: MovieCreditsResult) {
-                    detailView.setMovieCredit(concatStringsWSep(data.cast!!))
+                    val result: MovieCreditsResult? = data
+                    if (result != null)
+                        detailView.setMovieCredit(concatStringsWSep(result.cast!!))
+                    else
+                        Snackbar.make(
+                            mView,
+                            context.getString(R.string.s_something_went_wrong),
+                            Snackbar.LENGTH_LONG
+                        ).show()
                 }
 
                 override fun onError(e: Throwable) {

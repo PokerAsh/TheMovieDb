@@ -13,6 +13,7 @@ import android.view.MenuItem
 import com.yernarkt.themoviedb.R
 import com.yernarkt.themoviedb.ui.fragment.MovieDetailFragment
 import com.yernarkt.themoviedb.ui.fragment.MoviesBaseFragment
+import com.yernarkt.themoviedb.ui.fragment.MoviesSortDialogFragment
 import com.yernarkt.themoviedb.util.REQUEST_CODE_SEARCH_ACTIVITY
 import com.yernarkt.themoviedb.util.transition.FadeInTransition
 import com.yernarkt.themoviedb.util.transition.FadeOutTransition
@@ -102,6 +103,9 @@ class MovieBaseActivity : SomeUtilityActivity() {
         if (item.itemId == R.id.main_action_search) {
             showKeyboard()
             transitionToSearch()
+            return true
+        } else if (item.itemId == R.id.main_action_filter) {
+            MoviesSortDialogFragment.newInstance().show(supportFragmentManager, "filter")
             return true
         }
         return super.onOptionsItemSelected(item)

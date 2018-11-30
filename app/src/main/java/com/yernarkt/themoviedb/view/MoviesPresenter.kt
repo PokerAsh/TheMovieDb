@@ -12,10 +12,7 @@ import com.yernarkt.themoviedb.model.MoviesResult
 import com.yernarkt.themoviedb.model.upcoming.UpcomingMoviesResponse
 import com.yernarkt.themoviedb.network.ServiceGenerator
 import com.yernarkt.themoviedb.ui.fragment.MovieDetailFragment
-import com.yernarkt.themoviedb.util.API_KEY
-import com.yernarkt.themoviedb.util.LANGUAGE
-import com.yernarkt.themoviedb.util.OnRecyclerViewItemClickListener
-import com.yernarkt.themoviedb.util.SORT_BY
+import com.yernarkt.themoviedb.util.*
 import com.yernarkt.themoviedb.viewHolders.MoviesViewHolder
 import io.reactivex.Observable
 import io.reactivex.Observer
@@ -110,7 +107,8 @@ class MoviesPresenter(
         return ServiceGenerator.getRetrofitService().getUpcomingMovieList(
             API_KEY,
             LANGUAGE,
-            page
+            page,
+            REGION
         )
     }
 

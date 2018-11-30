@@ -1,6 +1,7 @@
 package com.yernarkt.themoviedb.util
 
 const val LANGUAGE = "ru-RU"
+const val REGION = "KZ"
 const val MOVIE_TYPE: String = "MovieType"
 const val GENRE_ID: String = "GenreId"
 const val MOVIE_ID: String = "MovieId"

@@ -15,4 +15,9 @@
     <string name="s_credits">Актеры</string>
     <string name="s_overview">Краткое описание</string>
     <string name="s_similar_movies">Похожие фильмы</string>
+    <string name="s_filter">Фильтровать</string>
+    <string name="s_something_went_wrong">Что-то пошло не так…</string>
+    <string name="s_year_start">Год выпуска от</string>
+    <string name="s_year_end">Год выпуска до</string>
+    <string name="s_choose_genre">Выберите жанр</string>
 </resources>
