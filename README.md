@@ -40,4 +40,4 @@
 выпущенные от n года, и до n года по выбранному жанру.
 4. Использованы Анимации для переходов между экранами (Shared Element Transition между Fragment-ами и SimpleTransitionListener между MoviesBaseActivity и SearchActivity).
 5. Использован RxJava. Не использованы Data Binding, Dependency Injection
-6. Нету покрытия и 1% кода UI и Unit тестами
+6. Не покрыт и 1% кода UI и Unit тестами
