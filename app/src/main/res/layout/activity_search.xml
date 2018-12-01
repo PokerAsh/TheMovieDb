@@ -3,18 +3,8 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="match_parent" xmlns:shimmer="http://schemas.android.com/tools"
         android:orientation="vertical">
-
-    <ProgressBar
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/searchProgressBar" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
-            android:visibility="gone"
-            android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"/>
 
     <com.yernarkt.themoviedb.util.custom.CustomSearchBar
             android:id="@+id/searchToolbar"
@@ -23,6 +13,33 @@
             android:gravity="center" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/searchListShimmerContainer"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:orientation="vertical"
+            shimmer:duration="1500" app:layout_constraintTop_toBottomOf="@+id/searchToolbar"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="16dp"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="16dp" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+            <include layout="@layout/placeholder_fragment_movie_list"/>
+            <include layout="@layout/placeholder_fragment_movie_list"/>
+            <include layout="@layout/placeholder_fragment_movie_list"/>
+            <include layout="@layout/placeholder_fragment_movie_list"/>
+            <include layout="@layout/placeholder_fragment_movie_list"/>
+            <include layout="@layout/placeholder_fragment_movie_list"/>
+            <include layout="@layout/placeholder_fragment_movie_list"/>
+        </LinearLayout>
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
 
     <android.support.v7.widget.RecyclerView
             android:layout_width="0dp"

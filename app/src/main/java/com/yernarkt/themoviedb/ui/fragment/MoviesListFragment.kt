@@ -11,7 +11,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.yernarkt.themoviedb.R
 import com.yernarkt.themoviedb.util.*
 import com.yernarkt.themoviedb.view.IBaseView
@@ -21,7 +21,7 @@ class MoviesListFragment : Fragment(), IBaseView {
     private lateinit var appCompatBaseActivity: AppCompatActivity
     private lateinit var mView: View
     private lateinit var presenter: MoviesListPresenter
-    private var moviesProgressBar: ProgressBar? = null
+    private var shimmerLayout: ShimmerFrameLayout? = null
     private var moviesRecyclerView: RecyclerView? = null
 
     private var snackBar: Snackbar? = null
@@ -78,8 +78,8 @@ class MoviesListFragment : Fragment(), IBaseView {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        mView = inflater.inflate(R.layout.fragment_list, container, false)
-        moviesProgressBar = mView.findViewById(R.id.moviesProgressBar)
+        mView = inflater.inflate(R.layout.fragment_movie_list, container, false)
+        shimmerLayout = mView.findViewById(R.id.movieListShimmerContainer)
         moviesRecyclerView = mView.findViewById(R.id.moviesRecyclerView)
         return mView
     }
@@ -99,7 +99,13 @@ class MoviesListFragment : Fragment(), IBaseView {
 
     override fun onResume() {
         super.onResume()
+        shimmerLayout!!.startShimmer()
+    }
 
+    override fun onPause() {
+        shimmerLayout!!.stopShimmer()
+        snackBar!!.dismiss()
+        super.onPause()
     }
 
     private fun loadMovies() {
@@ -123,14 +129,15 @@ class MoviesListFragment : Fragment(), IBaseView {
     }
 
     override fun setVisibilityProgressBar(visibility: Int) {
+        shimmerLayout!!.visibility = visibility
         when (visibility) {
             View.GONE -> {
-                moviesProgressBar!!.visibility = View.GONE
+                shimmerLayout!!.stopShimmer()
                 moviesRecyclerView!!.visibility = View.VISIBLE
                 Handler().postDelayed({ moviesRecyclerView!!.scrollToPosition(0) }, 200)
             }
             View.VISIBLE -> {
-                moviesProgressBar!!.visibility = View.VISIBLE
+                shimmerLayout!!.startShimmer()
                 moviesRecyclerView!!.visibility = View.GONE
             }
         }
@@ -140,11 +147,6 @@ class MoviesListFragment : Fragment(), IBaseView {
         val linearLayoutManager = GridLayoutManager(context, 2)
         moviesRecyclerView!!.layoutManager = linearLayoutManager
         moviesRecyclerView!!.adapter = adapter
-    }
-
-    override fun onPause() {
-        super.onPause()
-        snackBar!!.dismiss()
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {

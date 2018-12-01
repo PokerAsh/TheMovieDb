@@ -13,7 +13,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.EditText
-import android.widget.ProgressBar
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.yernarkt.themoviedb.R
 import com.yernarkt.themoviedb.util.custom.CustomSearchBar
 import com.yernarkt.themoviedb.util.transition.FadeInTransition
@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit
 class SearchActivity : SomeUtilityActivity(), IBaseView {
     private var searchbar: CustomSearchBar? = null
     private var searchMoviesText: EditText? = null
-    private var searchProgressBar: ProgressBar? = null
+    private var searchShimmer: ShimmerFrameLayout? = null
     private var searchRecyclerView: RecyclerView? = null
     private var searchPresenter: SearchPresenter? = null
     private var observable: Disposable? = null
@@ -91,7 +91,7 @@ class SearchActivity : SomeUtilityActivity(), IBaseView {
     private fun initViews() {
         searchbar = findViewById(R.id.searchToolbar)
         searchMoviesText = findViewById(R.id.searchMoviesText)
-        searchProgressBar = findViewById(R.id.searchProgressBar)
+        searchShimmer = findViewById(R.id.searchListShimmerContainer)
         searchRecyclerView = findViewById(R.id.searchMovieList)
     }
 
@@ -103,9 +103,15 @@ class SearchActivity : SomeUtilityActivity(), IBaseView {
         return savedInstanceState == null
     }
 
+    override fun onResume() {
+        super.onResume()
+        searchShimmer!!.startShimmer()
+    }
+
     override fun onPause() {
-        super.onPause()
+        searchShimmer!!.stopShimmer()
         observable!!.dispose()
+        super.onPause()
     }
 
     override fun finish() {
@@ -136,14 +142,14 @@ class SearchActivity : SomeUtilityActivity(), IBaseView {
 
     override fun setVisibilityProgressBar(visibility: Int) {
         runOnUiThread {
+            searchShimmer!!.visibility = visibility
             when (visibility) {
                 View.GONE -> {
-                    searchProgressBar!!.visibility = View.GONE
                     searchRecyclerView!!.visibility = View.VISIBLE
                     Handler().postDelayed({ searchRecyclerView!!.scrollToPosition(0) }, 200)
                 }
                 View.VISIBLE -> {
-                    searchProgressBar!!.visibility = View.VISIBLE
+                    searchShimmer!!.startShimmer()
                     searchRecyclerView!!.visibility = View.GONE
                 }
             }

@@ -11,7 +11,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.yernarkt.themoviedb.R
 import com.yernarkt.themoviedb.util.InternetConnection
 import com.yernarkt.themoviedb.view.GenrePresenter
@@ -21,8 +21,8 @@ class GenresListFragment : Fragment(), IBaseView {
     private lateinit var appCompatActivity: AppCompatActivity
     private lateinit var mView: View
     private lateinit var presenter: GenrePresenter
-    private var moviesProgressBar: ProgressBar? = null
-    private var moviesRecyclerView: RecyclerView? = null
+    private var shimmerLayout: ShimmerFrameLayout? = null
+    private var genreRecyclerView: RecyclerView? = null
     private lateinit var snackBar: Snackbar
 
     companion object {
@@ -37,9 +37,9 @@ class GenresListFragment : Fragment(), IBaseView {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        mView = inflater.inflate(R.layout.fragment_list, container, false)
-        moviesProgressBar = mView.findViewById(R.id.moviesProgressBar)
-        moviesRecyclerView = mView.findViewById(R.id.moviesRecyclerView)
+        mView = inflater.inflate(R.layout.fragment_genre_list, container, false)
+        shimmerLayout = mView.findViewById(R.id.genreListShimmerContainer)
+        genreRecyclerView = mView.findViewById(R.id.genresRecyclerView)
         return mView
     }
 
@@ -54,6 +54,7 @@ class GenresListFragment : Fragment(), IBaseView {
 
     override fun onResume() {
         super.onResume()
+        shimmerLayout!!.startShimmer()
         loadGenre()
     }
 
@@ -70,27 +71,28 @@ class GenresListFragment : Fragment(), IBaseView {
     }
 
     override fun setVisibilityProgressBar(visibility: Int) {
+        shimmerLayout!!.visibility = visibility
         when (visibility) {
             View.GONE -> {
-                moviesProgressBar!!.visibility = View.GONE
-                moviesRecyclerView!!.visibility = View.VISIBLE
-                Handler().postDelayed({ moviesRecyclerView!!.scrollToPosition(0) }, 200)
+                genreRecyclerView!!.visibility = View.VISIBLE
+                Handler().postDelayed({ genreRecyclerView!!.scrollToPosition(0) }, 200)
             }
             View.VISIBLE -> {
-                moviesProgressBar!!.visibility = View.VISIBLE
-                moviesRecyclerView!!.visibility = View.GONE
+                shimmerLayout!!.startShimmer()
+                genreRecyclerView!!.visibility = View.GONE
             }
         }
     }
 
     override fun setRecyclerViewAdapter(adapter: RecyclerView.Adapter<*>) {
         val linearLayoutManager = LinearLayoutManager(context)
-        moviesRecyclerView!!.layoutManager = linearLayoutManager
-        moviesRecyclerView!!.adapter = adapter
+        genreRecyclerView!!.layoutManager = linearLayoutManager
+        genreRecyclerView!!.adapter = adapter
     }
 
     override fun onPause() {
         super.onPause()
         snackBar.dismiss()
+        shimmerLayout!!.stopShimmer()
     }
 }

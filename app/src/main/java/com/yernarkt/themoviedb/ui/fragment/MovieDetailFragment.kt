@@ -16,7 +16,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.ProgressBar
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
@@ -24,6 +23,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import com.bumptech.glide.request.transition.Transition
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.yernarkt.themoviedb.R
 import com.yernarkt.themoviedb.ui.activities.MovieBaseActivity
 import com.yernarkt.themoviedb.util.*
@@ -33,7 +33,12 @@ import com.yernarkt.themoviedb.view.MovieDetailView
 class MovieDetailFragment : Fragment(), MovieDetailView {
     private lateinit var appCompatActivity: MovieBaseActivity
     private lateinit var mView: View
-    private var detailProgressBar: ProgressBar? = null
+    private var detailImageShimmer: ShimmerFrameLayout? = null
+    private var detailCreditShimmer: ShimmerFrameLayout? = null
+    private var detailOverviewShimmer: ShimmerFrameLayout? = null
+    private var detailRecyclerViewShimmer: ShimmerFrameLayout? = null
+
+
     private var presenter: MovieDetailPresenter? = null
     private var detailMovieList: RecyclerView? = null
     private var detailImageView: ImageView? = null
@@ -90,7 +95,22 @@ class MovieDetailFragment : Fragment(), MovieDetailView {
 
     override fun onResume() {
         super.onResume()
+        shimmerTrigger(true)
         loadData()
+    }
+
+    private fun shimmerTrigger(isToStart: Boolean) {
+        if (isToStart) {
+            detailImageShimmer!!.startShimmer()
+            detailCreditShimmer!!.startShimmer()
+            detailOverviewShimmer!!.startShimmer()
+            detailRecyclerViewShimmer!!.startShimmer()
+        } else {
+            detailImageShimmer!!.stopShimmer()
+            detailCreditShimmer!!.stopShimmer()
+            detailOverviewShimmer!!.stopShimmer()
+            detailRecyclerViewShimmer!!.stopShimmer()
+        }
     }
 
     private fun loadData() {
@@ -112,12 +132,16 @@ class MovieDetailFragment : Fragment(), MovieDetailView {
 
     private fun initViews() {
         detailMovieList = mView.findViewById(R.id.detailSimilarMoviesList)
-        detailProgressBar = mView.findViewById(R.id.detailProgressBar)
         detailImageView = mView.findViewById(R.id.detailImageView)
         detailActors = mView.findViewById(R.id.detailActors)
         detailDescription = mView.findViewById(R.id.detailDescription)
         detailView = mView.findViewById(R.id.detailViewBackground)
         detailTitle = mView.findViewById(R.id.detailNameText)
+
+        detailImageShimmer = mView.findViewById(R.id.detailImageViewShimmerContainer)
+        detailCreditShimmer = mView.findViewById(R.id.detailCreditsShimmerContainer)
+        detailOverviewShimmer = mView.findViewById(R.id.detailOverViewShimmerContainer)
+        detailRecyclerViewShimmer = mView.findViewById(R.id.listShimmerContainer)
 
         setTransitionAnimation()
     }
@@ -147,18 +171,29 @@ class MovieDetailFragment : Fragment(), MovieDetailView {
                 if (!movieOverview!!.isEmpty()) movieOverview else getString(R.string.s_no_overview)
     }
 
+    override fun onPause() {
+        shimmerTrigger(false)
+        snackBar!!.dismiss()
+        super.onPause()
+    }
+
     private fun initPresenter() {
         presenter = MovieDetailPresenter(appCompatActivity, this, mView, this@MovieDetailFragment)
     }
 
     override fun setVisibilityProgressBar(visibility: Int) {
-        detailProgressBar!!.visibility = visibility
+        detailImageShimmer!!.visibility = visibility
+        detailOverviewShimmer!!.visibility = visibility
+        detailCreditShimmer!!.visibility = visibility
+        detailRecyclerViewShimmer!!.visibility = visibility
+
         when (visibility) {
             View.GONE -> {
                 detailMovieList!!.visibility = View.VISIBLE
                 Handler().postDelayed({ detailMovieList!!.scrollToPosition(0) }, 200)
             }
             View.VISIBLE -> {
+                shimmerTrigger(true)
                 detailMovieList!!.visibility = View.GONE
             }
         }
