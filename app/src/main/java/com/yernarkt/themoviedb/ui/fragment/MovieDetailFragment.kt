@@ -73,6 +73,11 @@ class MovieDetailFragment : Fragment(), MovieDetailView {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        mView = inflater.inflate(R.layout.fragment_movie_detail, container, false)
+        return mView
+    }
+
+    private fun getArgumentsFromBundle() {
         val bundle = arguments
         if (bundle != null) {
             movieId = bundle.getString(MOVIE_ID, "")
@@ -80,12 +85,9 @@ class MovieDetailFragment : Fragment(), MovieDetailView {
             moviePoster = bundle.getString(MOVIE_POSTER, "")
             movieOverview = bundle.getString(MOVIE_OVERVIEW, "")
         }
-
-        mView = inflater.inflate(R.layout.fragment_movie_detail, container, false)
-        setSupportToolbar()
-        initViews()
-        return mView
     }
+
+
 
 
     private fun setSupportToolbar() {
@@ -127,6 +129,9 @@ class MovieDetailFragment : Fragment(), MovieDetailView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setSupportToolbar()
+        getArgumentsFromBundle()
+        initViews()
         initPresenter()
     }
 
