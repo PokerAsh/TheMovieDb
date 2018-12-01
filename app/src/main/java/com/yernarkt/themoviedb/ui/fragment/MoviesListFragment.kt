@@ -15,12 +15,12 @@ import android.widget.ProgressBar
 import com.yernarkt.themoviedb.R
 import com.yernarkt.themoviedb.util.*
 import com.yernarkt.themoviedb.view.IBaseView
-import com.yernarkt.themoviedb.view.MoviesPresenter
+import com.yernarkt.themoviedb.view.MoviesListPresenter
 
 class MoviesListFragment : Fragment(), IBaseView {
     private lateinit var appCompatBaseActivity: AppCompatActivity
     private lateinit var mView: View
-    private lateinit var presenter: MoviesPresenter
+    private lateinit var presenter: MoviesListPresenter
     private var moviesProgressBar: ProgressBar? = null
     private var moviesRecyclerView: RecyclerView? = null
 
@@ -88,6 +88,7 @@ class MoviesListFragment : Fragment(), IBaseView {
         super.onViewCreated(view, savedInstanceState)
         setupTitle()
         initPresenter()
+        loadMovies()
     }
 
     private fun setupTitle() {
@@ -98,7 +99,7 @@ class MoviesListFragment : Fragment(), IBaseView {
 
     override fun onResume() {
         super.onResume()
-        loadMovies()
+
     }
 
     private fun loadMovies() {
@@ -118,7 +119,7 @@ class MoviesListFragment : Fragment(), IBaseView {
     }
 
     private fun initPresenter() {
-        presenter = MoviesPresenter(appCompatBaseActivity, this, mView)
+        presenter = MoviesListPresenter(appCompatBaseActivity, this, mView, this@MoviesListFragment)
     }
 
     override fun setVisibilityProgressBar(visibility: Int) {

@@ -1,9 +1,13 @@
 package com.yernarkt.themoviedb.ui.fragment
 
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Handler
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
+import android.support.v7.app.AppCompatActivity
+import android.support.v7.graphics.Palette
 import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -13,40 +17,45 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.BitmapImageViewTarget
+import com.bumptech.glide.request.transition.Transition
 import com.yernarkt.themoviedb.R
-import com.yernarkt.themoviedb.model.detail.MovieResultDetail
 import com.yernarkt.themoviedb.ui.activities.MovieBaseActivity
-import com.yernarkt.themoviedb.util.BASE_IMAGE_URL
-import com.yernarkt.themoviedb.util.InternetConnection
-import com.yernarkt.themoviedb.util.MOVIE_ID
-import com.yernarkt.themoviedb.util.MOVIE_TITLE
+import com.yernarkt.themoviedb.util.*
 import com.yernarkt.themoviedb.view.MovieDetailPresenter
 import com.yernarkt.themoviedb.view.MovieDetailView
-import timber.log.Timber
 
 class MovieDetailFragment : Fragment(), MovieDetailView {
     private lateinit var appCompatActivity: MovieBaseActivity
     private lateinit var mView: View
     private var detailProgressBar: ProgressBar? = null
     private var presenter: MovieDetailPresenter? = null
-    private var movieTitle: String? = null
-    private var movieId: String? = null
     private var detailMovieList: RecyclerView? = null
     private var detailImageView: ImageView? = null
+    private var detailView: View? = null
+    private var detailTitle: TextView? = null
     private var detailActors: AppCompatTextView? = null
     private var detailDescription: AppCompatTextView? = null
     private var snackBar: Snackbar? = null
 
+    private var movieTitle: String? = null
+    private var movieId: String? = null
+    private var moviePoster: String? = null
+    private var movieOverview: String? = null
+
     companion object {
-        fun newInstance(id: String, title: String): MovieDetailFragment {
+        fun newInstance(id: String, title: String, poster: String, movieOverview: String): MovieDetailFragment {
             val fragment = MovieDetailFragment()
             val bundle = Bundle()
             bundle.putString(MOVIE_ID, id)
             bundle.putString(MOVIE_TITLE, title)
+            bundle.putString(MOVIE_POSTER, poster)
+            bundle.putString(MOVIE_OVERVIEW, movieOverview)
             fragment.arguments = bundle
             return fragment
         }
@@ -56,18 +65,20 @@ class MovieDetailFragment : Fragment(), MovieDetailView {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         appCompatActivity = context as MovieBaseActivity
+    }
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val bundle = arguments
         if (bundle != null) {
             movieId = bundle.getString(MOVIE_ID, "")
             movieTitle = bundle.getString(MOVIE_TITLE, "")
-            Timber.d(movieId)
+            moviePoster = bundle.getString(MOVIE_POSTER, "")
+            movieOverview = bundle.getString(MOVIE_OVERVIEW, "")
         }
-    }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mView = inflater.inflate(R.layout.fragment_movie_detail, container, false)
         setSupportToolbar()
+        initViews()
         return mView
     }
 
@@ -88,7 +99,7 @@ class MovieDetailFragment : Fragment(), MovieDetailView {
             snackBar!!.dismiss()
         }
         if (InternetConnection.checkConnection(appCompatActivity)) {
-            presenter!!.loadMovieById(movieId!!.toInt())
+            presenter!!.loadMovieCredits(movieId!!.toInt())
         } else {
             snackBar!!.show()
         }
@@ -96,7 +107,6 @@ class MovieDetailFragment : Fragment(), MovieDetailView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViews()
         initPresenter()
     }
 
@@ -106,10 +116,39 @@ class MovieDetailFragment : Fragment(), MovieDetailView {
         detailImageView = mView.findViewById(R.id.detailImageView)
         detailActors = mView.findViewById(R.id.detailActors)
         detailDescription = mView.findViewById(R.id.detailDescription)
+        detailView = mView.findViewById(R.id.detailViewBackground)
+        detailTitle = mView.findViewById(R.id.detailNameText)
+
+        setTransitionAnimation()
+    }
+
+    private fun setTransitionAnimation() {
+        val options = RequestOptions()
+            .centerCrop()
+            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+            .error(R.drawable.ic_no_image)
+            .priority(Priority.HIGH)
+
+        if (moviePoster != null)
+            Glide.with(appCompatActivity)
+                .asBitmap()
+                .load(String.format("%s%s", BASE_IMAGE_URL, moviePoster))
+                .apply(options)
+                .into(object : BitmapImageViewTarget(detailImageView) {
+                    override fun onResourceReady(bitmap: Bitmap, transition: Transition<in Bitmap>?) {
+                        super.onResourceReady(bitmap, transition)
+                        Palette.from(bitmap)
+                            .generate { palette -> setBackgroundColor(context as AppCompatActivity, palette!!) }
+                    }
+                })
+        detailTitle!!.text = movieTitle
+
+        detailDescription!!.text =
+                if (!movieOverview!!.isEmpty()) movieOverview else getString(R.string.s_no_overview)
     }
 
     private fun initPresenter() {
-        presenter = MovieDetailPresenter(appCompatActivity, this, mView)
+        presenter = MovieDetailPresenter(appCompatActivity, this, mView, this@MovieDetailFragment)
     }
 
     override fun setVisibilityProgressBar(visibility: Int) {
@@ -131,22 +170,38 @@ class MovieDetailFragment : Fragment(), MovieDetailView {
         detailMovieList!!.adapter = adapter
     }
 
-    override fun setMovieDetail(data: MovieResultDetail) {
-        val options = RequestOptions()
-            .centerCrop()
-            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-            .error(R.drawable.ic_no_image)
-            .priority(Priority.HIGH)
+//    override fun setMovieDetail(data: MovieResultDetail) {
+//        val options = RequestOptions()
+//            .centerCrop()
+//            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+//            .error(R.drawable.ic_no_image)
+//            .priority(Priority.HIGH)
+//
+//        if (data.posterPath != null)
+//            Glide.with(appCompatActivity)
+//                .asBitmap()
+//                .load(String.format("%s%s", BASE_IMAGE_URL, data.posterPath))
+//                .apply(options)
+//                .into(object : BitmapImageViewTarget(detailImageView) {
+//                    override fun onResourceReady(bitmap: Bitmap, transition: Transition<in Bitmap>?) {
+//                        super.onResourceReady(bitmap, transition)
+//                        Palette.from(bitmap)
+//                            .generate { palette -> setBackgroundColor(context as AppCompatActivity, palette!!) }
+//                    }
+//                })
+//
+//        detailTitle!!.text = movieTitle
+//
+//        detailDescription!!.text =
+//                if (!data.overview!!.isEmpty()) data.overview!! else getString(R.string.s_no_overview)
+//    }
 
-        if (data.posterPath != null)
-            Glide.with(appCompatActivity)
-                .asBitmap()
-                .load(String.format("%s%s", BASE_IMAGE_URL, data.posterPath))
-                .apply(options)
-                .into(detailImageView!!)
-
-        detailDescription!!.text =
-                if (!data.overview!!.isEmpty()) data.overview!! else getString(R.string.s_no_overview)
+    private fun setBackgroundColor(context: AppCompatActivity, palette: Palette) {
+        detailView!!.setBackgroundColor(
+            palette.getVibrantColor(
+                ContextCompat.getColor(context, R.color.black_translucent_60)
+            )
+        )
     }
 
     override fun setMovieCredit(cast: String) {

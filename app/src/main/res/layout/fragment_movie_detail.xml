@@ -30,8 +30,39 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    android:transitionName="moviePoster"
                     android:scaleType="fitCenter"
                     android:layout_marginStart="16dp" android:layout_marginEnd="16dp" android:layout_marginTop="8dp"/>
+
+            <View
+                    android:id="@+id/detailViewBackground"
+                    android:layout_width="0dp"
+                    android:layout_height="45dp"
+                    android:layout_gravity="bottom"
+                    android:background="@color/colorPrimary"
+                    android:transitionName="movieView"
+                    android:gravity="center"
+                    app:layout_constraintBottom_toBottomOf="@+id/detailImageView"
+                    app:layout_constraintEnd_toEndOf="@+id/detailImageView"
+                    app:layout_constraintStart_toStartOf="@+id/detailImageView"/>
+
+            <TextView
+                    android:id="@+id/detailNameText"
+                    android:layout_width="0dp"
+                    android:layout_height="45dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_gravity="bottom"
+                    android:gravity="center"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:transitionName="movieTitle"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/detailImageView"
+                    app:layout_constraintEnd_toEndOf="@+id/detailImageView"
+                    app:layout_constraintStart_toStartOf="@+id/detailImageView" android:textAlignment="center"
+                    tools:text="StarWars: Hello"/>
 
             <View
                     android:id="@+id/detailDivider"

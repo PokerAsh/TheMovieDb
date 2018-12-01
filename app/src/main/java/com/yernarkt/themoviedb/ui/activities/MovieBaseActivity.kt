@@ -23,6 +23,8 @@ class MovieBaseActivity : SomeUtilityActivity() {
     private var mainToolbar: Toolbar? = null
     private var movieId: String? = null
     private var movieTitle: String? = null
+    private var moviePoster: String? = null
+    private var movieOverview: String? = null
     private var toolbarMargin: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,7 +62,9 @@ class MovieBaseActivity : SomeUtilityActivity() {
                     R.id.activity_container,
                     MovieDetailFragment.newInstance(
                         movieId!!,
-                        movieTitle!!
+                        movieTitle!!,
+                        moviePoster!!,
+                        movieOverview!!
                     )
                 )
                 .addToBackStack(null)
@@ -98,6 +102,8 @@ class MovieBaseActivity : SomeUtilityActivity() {
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_SEARCH_ACTIVITY && data != null) {
             movieId = data.getStringExtra("MovieId")
             movieTitle = data.getStringExtra("MovieTitle")
+            moviePoster = data.getStringExtra("MoviePoster")
+            movieOverview = data.getStringExtra("MovieOverview")
         }
     }
 

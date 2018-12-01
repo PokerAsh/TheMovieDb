@@ -67,6 +67,8 @@ class SearchPresenter(val context: Context, val iBaseView: IBaseView) {
                                         val intent = Intent()
                                         intent.putExtra("MovieId", movieList!![position].id.toString())
                                         intent.putExtra("MovieTitle", movieList!![position].title!!)
+                                        intent.putExtra("MoviePoster", movieList!![position].posterPath!!)
+                                        intent.putExtra("MovieOverview", movieList!![position].overview!!)
                                         activity.setResult(RESULT_OK, intent)
                                         activity.finish()
                                     }

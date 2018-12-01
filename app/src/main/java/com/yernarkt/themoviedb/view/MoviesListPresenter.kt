@@ -1,10 +1,13 @@
 package com.yernarkt.themoviedb.view
 
+import android.app.PendingIntent.getActivity
 import android.content.Context
 import android.support.design.widget.Snackbar
+import android.support.transition.*
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import android.widget.ImageView
 import com.yernarkt.themoviedb.R
 import com.yernarkt.themoviedb.adapter.MoviesAdapter
 import com.yernarkt.themoviedb.model.MoviesResponse
@@ -12,6 +15,7 @@ import com.yernarkt.themoviedb.model.MoviesResult
 import com.yernarkt.themoviedb.model.upcoming.UpcomingMoviesResponse
 import com.yernarkt.themoviedb.network.ServiceGenerator
 import com.yernarkt.themoviedb.ui.fragment.MovieDetailFragment
+import com.yernarkt.themoviedb.ui.fragment.MoviesListFragment
 import com.yernarkt.themoviedb.util.*
 import com.yernarkt.themoviedb.viewHolders.MoviesViewHolder
 import io.reactivex.Observable
@@ -21,10 +25,12 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
-class MoviesPresenter(
+
+class MoviesListPresenter(
     private val context: Context,
     private val baseView: IBaseView,
-    private val mView: View
+    private val mView: View,
+    private val moviesListFragment: MoviesListFragment
 ) {
     private var movieList: ArrayList<MoviesResult>? = null
     private var adapter: MoviesAdapter<MoviesResult, MoviesViewHolder>? = null
@@ -70,15 +76,34 @@ class MoviesPresenter(
                                 holder.setClick(object : OnRecyclerViewItemClickListener {
                                     override fun onItemClick(position: Int) {
                                         if (position != RecyclerView.NO_POSITION) {
+                                            val detailFragment = MovieDetailFragment.newInstance(
+                                                movieList!![position].id.toString(),
+                                                movieList!![position].title!!,
+                                                movieList!![position].posterPath!!,
+                                                movieList!![position].overview!!
+                                            )
+
+                                            val set = TransitionSet()
+                                            set.ordering = TransitionSet.ORDERING_TOGETHER
+                                            set.addTransition(ChangeBounds()).addTransition(ChangeTransform())
+                                                .addTransition(ChangeImageTransform())
+                                            detailFragment.sharedElementEnterTransition = set
+                                            detailFragment.enterTransition = Fade()
+                                            moviesListFragment.exitTransition = Fade()
+                                            detailFragment.sharedElementReturnTransition = set
+
                                             val activity = context as AppCompatActivity
                                             activity.supportFragmentManager
                                                 .beginTransaction()
+                                                .addSharedElement(
+                                                    holder.moviesPoster,
+                                                    holder.moviesPoster.transitionName
+                                                )
+                                                .addSharedElement(holder.moviesName, holder.moviesName.transitionName)
+                                                .addSharedElement(holder.moviesView, holder.moviesView.transitionName)
                                                 .replace(
                                                     R.id.activity_container,
-                                                    MovieDetailFragment.newInstance(
-                                                        movieList!![position].id.toString(),
-                                                        movieList!![position].title!!
-                                                    )
+                                                    detailFragment
                                                 )
                                                 .addToBackStack("movie_list")
                                                 .commit()

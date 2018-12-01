@@ -3,6 +3,7 @@ package com.yernarkt.themoviedb.viewHolders
 import android.content.Context
 import android.graphics.Bitmap
 import android.support.v4.content.ContextCompat
+import android.support.v4.view.ViewCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.graphics.Palette
 import android.support.v7.widget.RecyclerView
@@ -16,6 +17,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import com.bumptech.glide.request.transition.Transition
 import com.yernarkt.themoviedb.R
+import com.yernarkt.themoviedb.R.id.view
 import com.yernarkt.themoviedb.model.MoviesResult
 import com.yernarkt.themoviedb.model.detail.SimilarMoviesResult
 import com.yernarkt.themoviedb.util.BASE_IMAGE_URL
@@ -24,9 +26,9 @@ import com.yernarkt.themoviedb.util.OnRecyclerViewItemClickListener
 class MoviesViewHolder(itemView: View) :
     RecyclerView.ViewHolder(itemView), View.OnClickListener {
     private var onRecyclerViewItemClickListener: OnRecyclerViewItemClickListener? = null
-    private var moviesPoster: ImageView = itemView.findViewById(R.id.movieImageView)
-    private var moviesView: View = itemView.findViewById(R.id.movieViewBackground)
-    private var moviesName: TextView = itemView.findViewById(R.id.movieNameText)
+    var moviesPoster: ImageView = itemView.findViewById(R.id.movieImageView)
+    var moviesView: View = itemView.findViewById(R.id.movieViewBackground)
+    var moviesName: TextView = itemView.findViewById(R.id.movieNameText)
 
     fun bind(context: Context, data: MoviesResult) {
         moviesName.text = data.title
